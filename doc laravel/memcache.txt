@@ -1,3 +1,0 @@
-https://nhanweb.com/su-dung-memcache-voi-php-va-mysql.html
-http://kungfuphp.com/tong-hop-php/toan-tap-su-dung-memcache-trong-php-cat-dat-memcache.html
-http://kungfuphp.com/tong-hop-php/ap-dung-memcache-trong-php-va-mysql.html
