@@ -1,0 +1,123 @@
+http://www.mastercode.vn/blog/sql-server/bai-4-5-tich-hop-ket-qua-tu-nhieu-cau-truy-van-sql-structured-query-language.38
+
+	Mệnh đề UNION: hội kết quả của 2 câu truy vấn và loại bỏ kết quả trùng hợp
+			UNIONALL: không loại bỏ các hàng trùng lắp
+			
+	A/UNION
+	SELECT danh_sach_cot_1
+	FROM Ten_bang_1
+	UNION
+	SELECT danh_sach_cot_2
+	FROM ten_bang_2
+	[ORDER BY ds_cot_sap_xep]
+	
+	EX:
+	SELECT mavtu,‘N’ as LOAI, sum(slnhap) as TONGSL
+	FROM CTNVT
+	GROUP BY mavtu
+	UNION
+	SELECT mavtu,‘X’ as LOAI, sum(slxuat) as TONGSL
+	FROM CTXVT
+	GROUP BY mavtu
+	
+	B/Mệnh đề EXCEPT: 
+	Trả về những dòng có trong kết quả bên trái và không có trong kết quả bên phải
+	
+	VD : Tìm những mặt hàng chưa xuất bao giờ
+		SELECT mavt FROM vattu
+		EXCEPT
+		SELECT mavt FROM ctpx
+		
+	C/Mệnh đề INTERSECT
+	Trả về những dòng có trong kết quả của cả 2 bên
+	
+	VD : Tìm những mặt hàng vừa có nhập, vừa có xuất
+	Select mavt from ctpn
+	INTERSECT
+	Select mavt from ctpx
+	
+	D/GROUP BY Toán tử ROLLUP
+	-ROLLUP, CUBE là phần mở rộng của mệnh đề GROUP BY
+	-Sử dụng để phát sinh các tổng trung gian từ các cột trong group by
+	
+		SELECT [cot,] ham_phan_nhom(cot). . .
+		FROM ten_bang
+		[WHERE dieu_kien]
+		[GROUP BY bieu_thuc_phan_nhom [WITH ROLLUP]]
+		[HAVING bieu_thuc_loc_nhom];
+		[ORDER BY cot]
+		
+		Ví dụ toán tử ROLLUP
+			SELECT maphong, macongviec, SUM(mucluong) as Luong
+			FROM qlns.nhanvien
+			WHERE maphong < 60
+			GROUP BY maphong, macongviec WITH ROLLUP
+			
+		Ví dụ toán tử CUBE
+			SELECT maphong, macongviec, SUM(mucluong)
+			FROM qlns.nhanvien
+			WHERE maphong < 60
+			GROUP BY maphong, macongviec WITH CUBE
+			
+	D/Hàm GROUPING
+	Hàm GROUPING có thể sử dụng với CUBE hoặc ROLLUP.
+	Sử dụng hàm GROUPING để tìm những dòng tổng được thêm bổ sung do các toán tử CUBE hoặc ROLLUP.
+	Hàm GROUPING trả về giá tri 0 hoặc 1.
+		SELECT [cot,] ham_phan_nhom(cot) . ,
+		GROUPING(bieu_thuc)
+		FROM ten_bang
+		[WHERE dieu_kien]
+		[GROUP BY bieu_thuc_phan_nhom [WITH ROLLUP|CUBE]]
+		[HAVING bieu_thuc_loc_nhom]
+		[ORDER BY cot]
+		
+		Ví dụ hàm GROUPING
+			SELECT maphong maph, macongviec macv,
+			SUM(mucluong),
+			GROUPING(maphong) nhom_maph,
+			GROUPING(macongviec) nhom_macv
+			FROM qlns.nhanvien
+			WHERE maphong < 50
+			GROUP BY maphong, macongviec WITH ROLLUP
+			
+	E/Chép dữ liệu ra bảng khác
+		Sử dụng mệnh đề SELECT INTO
+			-Chép dữ liệu ra bảng mới
+			-Chỉ chạy được 1 lần, ở lần sau bảng đã tồn tại thì sẽ gây ra lỗi
+		Cú pháp
+		SELECT ds_cac_cot INTO ten_bang_moi
+		FROM ten_bang
+		
+	F/Tổng hợp dữ liệu cuối nhóm
+	Mệnh đề COMPUTE, COMPUTE … BY
+		Sử dụng chung với các hàm thống kê SUM, COUNT, MAX, MIN, AVG
+		Với Compute By, phải có mệnh đề ORDER BY đi kèm
+	Cú pháp:
+	SELECT ds_cac_cot
+	FROM ten_bang
+	[ORDER BY Ten_cot_phan_nhom]
+	COMPUTE COUNT|MIN|MAX|SUM|AVG (Ten_cot)
+	[BY Ten_cot_phan_nhom]
+	
+	G/Sử dụng mệnh đề COMPUTE BY và các hàm tính toán để thống kê theo nhóm dữ liệu
+		Hiển thị các thông tin trong bảng CTPXUAT và bổ sung thêm cột thành tiền, 
+		sao cho có dòng thống kê tổng thành tiền ở từng nhóm phiếu xuất
+		Hiển thị trong bảng CTPNHAP các thông tin: mã vật tư, sốnhập hàng, số lượng nhập, 
+		đơn giá nhập và có dòng thống kê tổng số lượng, giá thấp nhất, 
+		giá cao nhất ở từng vật tư
+		
+		Giải bài tập :
+		--Câu 1 
+			SELECT cx.sopx,cx.mavtu,cx.slxuat,cx.dgxuat
+			FROM ctpxuat AS cx
+			ORDER BY cx.sopx
+			compute  SUM(cx.dgxuat) BY cx.sopx
+ 
+		-- Câu 2 
+			SELECT cn.mavtu,cn.slnhap,cn.sopn,cn.dgnhap
+			FROM ctpnhap AS cn
+			ORDER BY cn.mavtu
+			compute SUM(cn.slnhap),MIN(cn.dgnhap), MAX(cn.dgnhap) BY cn.mavtu
+	
+	
+	

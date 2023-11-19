@@ -1,0 +1,451 @@
+----Two div the same height------------
+
+.row {
+  display: flex; /* equal height of the children */
+}
+
+.col {
+  flex: 1; /* additionally, equal width */
+  
+  padding: 1em;
+  border: solid;
+}
+
+<div class="row">
+  <div class="col">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+  <div class="col">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad omnis quae expedita ipsum nobis praesentium velit animi minus amet perspiciatis laboriosam similique debitis iste ratione nemo ea at corporis aliquam.</div>
+</div>
+
+--------------
+
+--------------------hover image--------------
+
+.thumbnail-hover.title-hover:hover .thumbnail-hero-image {
+    filter: blur(10px)!important;
+    -webkit-filter: grayscale(0.5) blur(10px);
+}
+-------------- img display middle div-----------
+    .fileinput-sm-img {
+        height: 90px;
+        display: flex!important;
+        height: 90px; 
+    }
+
+    .fileinput-sm-img .image-sm-src {
+        margin: auto; 
+    }
+	
+	----------display img middle-------
+	.ccr-img {
+		height:100%
+        position:relative;
+    }
+    .ccr-img img{
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%, -50%);
+    }
+	
+	<div class="col-xs-6 text-center ccr-img"><img src="'+URL_PUBLIC+'assets/pages/img/ccrsign.png"></div>
+	
+	-------------------- bottom for each line to full width-----------------
+	.b_line {
+    border-bottom: 1px solid #000000;
+    text-align: justify;
+    border-collapse:collapse;
+    width: 100%;
+    line-height: 20px;
+	}
+	.b_line .span1 {
+		display: block;
+		margin-bottom: -1px;
+		border-collapse:collapse;
+		line-height: 20px;
+	}
+	.b_line .span1 .span2 {
+		border-collapse:collapse;
+		border-bottom: 1px solid #000000;
+		line-height: 20px;
+	}
+	
+	'<div class="col-xs-5 paddRL"><div class="col-xs-12 paddL">' +
+                    '<div class="b_line"><span class="span1">'+
+                        '<span class = "span2">'+info.BusinessName+'</span>' +
+                        '</span> </div>'+
+                    '</div>' + //end xs-12
+                '</div>' + //end xs-5
+
+    -------
+/*
+.b_line{
+    display: inline-block;
+    margin: 0;
+    padding:0px;
+    width: 100%!important;
+}
+.b_line div{
+    display: inline-block;
+    margin: 0;
+    padding:0px;
+    width: 100%!important;
+}
+.b_line div div{
+    border-bottom: 1px solid;
+    display: inline-block;
+    width: 100%!important;
+    margin: 0;
+}
+*/
+'<div class="col-xs-5 paddL"><div class="col-xs-12 paddL b_line">' +
+                        '<div class="col-xs-12 paddL"><div class="col-xs-12 paddL">'+info.BusinessName+'</div></div>' +
+                    '</div>' + //end xs-12
+                '</div>' + //end xs-5	
+				------------------------------------ input border none ----------------------------
+				
+	.inputborder_none {
+		border-style: none;
+		width: 100%;
+	}
+	
+	.inputnone{
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom:none;
+    width: 100%;
+}
+
+input.inputnone:focus{
+    outline: none;
+}
+
+------------
+.capitalize-leter{
+    text-transform: capitalize;
+}
+.word-wrap{
+    word-wrap: break-word;
+}
+------------- class--
+
+	.input-group[class*=col-] {
+		float: none;
+		
+	}
+	--------------------------------- modal---------------------	
+	<!--modal-->
+	<div class="modal fade" id="general-modal-small" tabindex="-1" role="basic" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+			   <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title">Modal Header</h4>
+		  </div>
+		  <div class="modal-body">
+			<p>Some text in the modal.</p>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
+		</div>
+		
+	</div>
+	<!--end modal-->
+	
+	javascript:
+	
+	     var $modal =$('#general-modal-small');
+         $modal.modal("show").on("shown.bs.modal", function () {
+         $modal.find('.modal-content').html(''+
+         '<div class="modal-header">'+
+         '<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>'+
+         '<h4 class="modal-title"><span style="color: #b81900">Import Success</span></h4>'+
+         '</div>'+
+         '<div class="modal-body">' +
+         '</div>' +
+         '<div class="modal-footer" style="text-align: left">'+
+
+         '<button type="button" aria-hidden="true" data-dismiss="modal"  class="btn btn btn-light-cus">Ok</button>'+
+         '</div>' +
+         '')
+         })
+		 
+		 -----------change size scrollBar----------
+		 /* Change width of VERTICAL SCROLLBAR */
+scrollbar[orient="vertical"], scrollbar[orient="vertical"] thumb, scrollbar[orient="vertical"] scrollbarbutton { max-width: 15px !important; -moz-appearance: none !important; }
+
+/* Change width of HORIZONTAL SCROLLBAR */
+scrollbar[orient="horizontal"], scrollbar[orient="horizontal"] thumb, scrollbar[orient="horizontal"] scrollbarbutton { max-height: 15px !important; -moz-appearance: none !important; }
+
+--------------------------- display center table in div----------------------------
+	#div {
+	  display: flex;
+	  justify-content: center;
+	}
+
+	#table {
+	  align-self: center;
+	}
+	
+--------------------------- table scroll-x -----------------------------------------
+	table.timeSheet{
+		width: 900px;
+	}
+
+	table {
+		display: table;
+	}
+
+	tbody {
+		display: table-row-group;
+		vertical-align: middle;
+		border-color: inherit;
+	}
+
+	tr {
+		display: table-row;
+		vertical-align: inherit;
+		border-color: inherit;
+	}
+
+	td, th {
+		display: table-cell;
+		vertical-align: inherit;
+	}
+	
+	<div class="col-md-12 top15" style="display: block;display: flex;justify-content: center;">
+			<table id="tbl-daily" class="timeSheet" style="align-self: center;">
+				<tbody style="">
+
+				</tbody>
+				<tfoot style="line-height: 50px">
+				<tr style="text-align: right;">
+					<td colspan="5" ><span class="msg-succ" id="msg-succ" style="padding-right: 30px"></span>
+						<span  class="msg-err" id="msg-err" style="padding-right: 30px"></span></td>
+					<td style="text-align: right"><button class="btn btn-primary" id="save-daily">Save</button></td>
+				</tr>
+				</tfoot>
+			</table>
+	</div>
+	------------------------ reponsive mobile------------
+	 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px){
+        table.timeSheet{
+            width: 730px;
+        }
+        .div-responsive{
+            justify-content: center;
+        }
+
+    }
+	
+	
+	   /* ----------- iPhone 5 and 5S ----------- */
+        /* Portrait and Landscape */
+    /*@media only screen and
+    (min-device-width: 320px) and (max-device-width: 568px) and
+    (-webkit-min-device-pixel-ratio: 2) {
+
+    }
+    */
+        /* Portrait */
+    @media only screen
+    and (min-device-width: 320px)
+    and (max-device-width: 568px)
+    and (-webkit-min-device-pixel-ratio: 2)
+    and (orientation: portrait) {
+        table.timeSheet{
+            width: 300px;
+        }
+    }
+
+        /* Landscape */
+    @media only screen
+    and (min-device-width: 320px)
+    and (max-device-width: 568px)
+    and (-webkit-min-device-pixel-ratio: 2)
+    and (orientation: landscape) {
+        table.timeSheet{
+            width: 500px;
+        }
+    }
+
+        /* ----------- iPhone 6 ----------- */
+
+        /* Portrait and Landscape */
+    @media only screen
+    and (min-device-width: 375px)
+    and (max-device-width: 667px)
+    and (-webkit-min-device-pixel-ratio: 2) {
+        table.timeSheet{
+            width: 350px;
+        }
+    }
+
+        /* Portrait */
+    @media only screen
+    and (min-device-width: 375px)
+    and (max-device-width: 667px)
+    and (-webkit-min-device-pixel-ratio: 2)
+    and (orientation: portrait) {
+        table.timeSheet{
+            width: 350px;
+        }
+    }
+
+        /* Landscape */
+    @media only screen
+    and (min-device-width: 375px)
+    and (max-device-width: 667px)
+    and (-webkit-min-device-pixel-ratio: 2)
+    and (orientation: landscape) {
+
+    }
+
+        /* ----------- iPhone 6+ ----------- */
+
+        /* Portrait and Landscape */
+    @media only screen
+    and (min-device-width: 414px)
+    and (max-device-width: 736px)
+    and (-webkit-min-device-pixel-ratio: 3) {
+
+    }
+
+        /* Portrait */
+    @media only screen
+    and (min-device-width: 414px)
+    and (max-device-width: 736px)
+    and (-webkit-min-device-pixel-ratio: 3)
+    and (orientation: portrait) {
+
+    }
+
+        /* Landscape */
+    @media only screen
+    and (min-device-width: 414px)
+    and (max-device-width: 736px)
+    and (-webkit-min-device-pixel-ratio: 3)
+    and (orientation: landscape) {
+
+    }
+	
+	-------------------------------- print in ipad-------------
+		@media print{
+		.body-print{
+			background:#fff!important;
+			margin-bottom: 0px;
+			margin-top: 0px;
+		}
+
+		.bodybackground{
+			background-color: #fff!important;
+		}
+		.page-footer {
+			background: #fff!important;
+			color: #fff;
+		}
+
+		.body-content{
+			background-color: #fff!important;
+		}
+		body * {
+			visibility: hidden;
+		}
+		#content-for-print, #content-for-print * {
+			visibility: visible;
+		}
+		#content-for-print {
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+	}
+	
+	<div class="body-print visible-print" id="content-for-print" style="width: 100%; padding: 0px;background:#fff!important;">
+
+	</div>
+	
+	----------print----------
+	
+	<style type="text/css" media="print">
+		@media print{
+			body * {
+				visibility: hidden;
+				/*set graphic*/
+				-webkit-print-color-adjust: exact;
+				color-adjust: exact !important;
+			}
+			#content-print, #content-print * {
+				visibility: visible;
+
+			}
+
+			input.h28{
+				font-size: 10px!important; height: 20px!important;
+				padding-top: 4px;
+			}
+
+			label, .form-control {
+				font-size: 10px!important;
+
+			}
+
+			.portlet.box>.portlet-body {
+				padding-top: -10px;
+				padding-bottom: 0;
+			}
+			.portlet.box>.portlet-title.row-selected{
+				background-color: #ececec!important;
+			}
+
+			.portlet>.portlet-title{
+				height:20px!important;
+			}
+
+			.portlet.box>.portlet-title>.caption {
+				padding: 7px 0 0px!important;
+			}
+
+			.portlet>.portlet-title>.tools {
+				padding: 7px 0 0px!important;;
+			}
+
+			.portlet>.portlet-title>.caption {
+				font-size: 10px;
+			}
+
+			.portlet>.portlet-title>.caption>.caption-subject {
+				font-size: 10px;
+			}
+
+			.form-horizontal .radio, .form-horizontal .checkbox, .form-horizontal .radio-inline, .form-horizontal .checkbox-inline {
+				padding-top: 5px;
+				margin-top: 0;
+				margin-bottom: 0;
+			}
+
+			.marginT10{
+				margin-top: 5px;
+			}
+
+			.marginT5{
+				margin-top: 2px;
+			}
+			.mt-checkbox>span {
+				top: 0px;
+			}
+
+			.mt-checkbox{
+				margin-bottom: 5px;
+			}
+		}
+
+		@page {
+			-webkit-print-color-adjust: exact;
+			color-adjust: exact !important;
+		}
+	</style
+
+

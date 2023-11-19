@@ -1,0 +1,391 @@
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName salescontrolcenter.com
+ #ServerAlias www.salescontrolcenter.com
+
+  DocumentRoot /mnt/web/freedomcrm/
+  <Directory /mnt/web/freedomcrm/>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+RewriteEngine on
+RewriteCond %{SERVER_NAME} =salescontrolcenter.com
+RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName dev.at1ts.com
+ #ServerAlias dev.at1ts.com
+
+  DocumentRoot /mnt/web/bacsi/public/public/
+  <Directory /mnt/web/bacsi/public/public/>
+ #   Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+ #   Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+RewriteEngine on
+RewriteCond %{SERVER_NAME} =dev.at1ts.com
+RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName api.dev.at1ts.com
+ #ServerAlias dev.at1ts.com
+
+  DocumentRoot /mnt/web/bacsi/api/
+  <Directory /mnt/web/bacsi/api/>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+RewriteEngine on
+RewriteCond %{SERVER_NAME} =api.dev.at1ts.com
+RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName api.salescontrolcenter.com
+
+  DocumentRoot /mnt/web/api/freedomcrm-api/
+  <Directory /mnt/web/api/freedomcrm-api>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+RewriteEngine on
+RewriteCond %{SERVER_NAME} =api.salescontrolcenter.com
+RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName myhospital.vn
+ #ServerAlias www.salescontrolcenter.com
+
+  DocumentRoot /mnt/web/myhospital/
+  <Directory /mnt/web/myhospital/>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+RewriteEngine on
+RewriteCond %{SERVER_NAME} =myhospital.vn
+RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName phone.at1ts.com
+ #ServerAlias phone.at1ts.com
+  DocumentRoot /mnt/web/1wire/
+  <Directory /mnt/web/1wire/>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+RewriteEngine on
+RewriteCond %{SERVER_NAME} =phone.at1ts.com
+RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName phone.1cxpro.com
+ #ServerAlias phone.at1ts.com
+  DocumentRoot /mnt/web/1wire_prod/
+  <Directory /mnt/web/1wire_prod/>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+RewriteEngine on
+RewriteCond %{SERVER_NAME} =phone.1cxpro.com
+RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName freight.brandonshome.com
+ #ServerAlias phone.at1ts.com
+  DocumentRoot /mnt/web/transport/transport/freight/
+  <Directory /mnt/web/transport/transport/freight>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+DirectoryIndex index.phtml *
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName admin.freight.brandonshome.com
+ #ServerAlias phone.at1ts.com
+  DocumentRoot /mnt/web/transport/transport/freight/admin/
+  <Directory /mnt/web/transport/transport/freight/admin>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName admin.strongtransportllc.com
+ #ServerAlias phone.at1ts.com
+  DocumentRoot /mnt/web/transport/transport/freight/admin/
+  <Directory /mnt/web/transport/transport/freight/admin>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  ServerName strongtransportllc.com
+ #ServerAlias phone.at1ts.com
+  DocumentRoot /mnt/web/transport/transport/freight/
+  <Directory /mnt/web/transport/transport/freight>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+	DirectoryIndex index.phtml *
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+------------------ssl.con
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  ServerName salescontrolcenter.com
+ #ServerAlias www.salescontrolcenter.com
+
+  DocumentRoot /mnt/web/freedomcrm/
+  <Directory /mnt/web/freedomcrm/>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+  
+  
+ServerAlias www.salescontrolcenter.com
+SSLCertificateFile /etc/letsencrypt/live/salescontrolcenter.com-0002/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/salescontrolcenter.com-0002/privkey.pem
+</VirtualHost>
+</IfModule>
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  ServerName api.salescontrolcenter.com
+
+  DocumentRoot /mnt/web/api/freedomcrm-api/
+  <Directory /mnt/web/api/freedomcrm-api>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+
+Include /etc/letsencrypt/options-ssl-apache.conf
+SSLCertificateFile /etc/letsencrypt/live/salescontrolcenter.com-0002/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/salescontrolcenter.com-0002/privkey.pem
+</VirtualHost>
+</IfModule>
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  ServerName api.salescontrolcenter.com
+
+  DocumentRoot /mnt/web/api/freedomcrm-api/
+  <Directory /mnt/web/api/freedomcrm-api>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+
+Include /etc/letsencrypt/options-ssl-apache.conf
+SSLCertificateFile /etc/letsencrypt/live/salescontrolcenter.com-0002/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/salescontrolcenter.com-0002/privkey.pem
+</VirtualHost>
+</IfModule>
+
+
+
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  ServerName dev.at1ts.com
+ #ServerAlias www.salescontrolcenter.com
+
+  DocumentRoot /mnt/web/bacsi/public/public/
+  <Directory /mnt/web/bacsi/public/public/>
+#    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+#    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+Include /etc/letsencrypt/options-ssl-apache.conf
+SSLCertificateFile /etc/letsencrypt/live/salescontrolcenter.com-0002/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/salescontrolcenter.com-0002/privkey.pem
+</VirtualHost>
+</IfModule>
+
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  ServerName api.dev.at1ts.com
+ #ServerAlias dev.at1ts.com
+
+  DocumentRoot /mnt/web/bacsi/api/
+  <Directory /mnt/web/bacsi/api/>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+Include /etc/letsencrypt/options-ssl-apache.conf
+SSLCertificateFile /etc/letsencrypt/live/salescontrolcenter.com-0002/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/salescontrolcenter.com-0002/privkey.pem
+</VirtualHost>
+</IfModule>
+
+SSLCertificateFile /etc/letsencrypt/live/salescontrolcenter.com-0003/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/salescontrolcenter.com-0003/privkey.pem
+Include /etc/letsencrypt/options-ssl-apache.conf
+</VirtualHost>
+</IfModule>
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  ServerName strongtransportllc.com
+ #ServerAlias phone.at1ts.com
+  DocumentRoot /mnt/web/transport/transport/freight/
+  <Directory /mnt/web/transport/transport/freight>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+DirectoryIndex index.phtml *
+  </Directory>
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+  
+  SSLCertificateFile /etc/letsencrypt/live/salescontrolcenter.com-0003/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/salescontrolcenter.com-0003/privkey.pem
+Include /etc/letsencrypt/options-ssl-apache.conf
+</VirtualHost>
+</IfModule>
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  ServerName admin.strongtransportllc.com
+ #ServerAlias phone.at1ts.com
+  DocumentRoot /mnt/web/transport/transport/freight/admin/
+  <Directory /mnt/web/transport/transport/freight/admin>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Require all granted
+  </Directory>
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+  # Possible values include: debug, info, notice, warn, error, crit,
+  # alert, emerg.
+  LogLevel warn
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+
+SSLCertificateFile /etc/letsencrypt/live/salescontrolcenter.com-0003/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/salescontrolcenter.com-0003/privkey.pem
+Include /etc/letsencrypt/options-ssl-apache.conf
+</VirtualHost>
+</IfModule>
+  
+  
+-------
+
+

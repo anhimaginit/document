@@ -1,0 +1,12 @@
+https://learn.bubbleapps.io/version-p_1585539060670x653941168363772800?debug_mode=true
+
+https://anhfirstapp.bubbleapps.io/version-test
+
+Tạo Theme cho app sử dụng Redux và style component
+https://viblo.asia/p/react-native-tao-theme-cho-app-su-dung-redux-va-style-component-jvElawNAKkw#_appjs-2
+
+create project by expo
+https://code.tutsplus.com/vi/tutorials/easier-react-native-development-with-expo--cms-30546
+
+react native -redux
+https://medium.com/mesan-digital/tutorial-react-native-redux-boilerplate-4899f5c4f431

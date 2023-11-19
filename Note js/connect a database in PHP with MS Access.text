@@ -1,0 +1,187 @@
+How do I connect a database in PHP with MS Access that's hosted on Linux?
+https://www.quora.com/How-do-I-connect-a-database-in-PHP-with-MS-Access-thats-hosted-on-Linux
+
+sudo /etc/init.d/apache2 restart
+
+a/Update
+	#apt-get update
+	#apt-get upgrade
+b/ Install essential packet
+	# apt-get install build-essential
+
+	sudo apt-get install autoconf
+c/	Test:
+	# whereis gcc make
+	# gcc -v
+	# make -v
+	
+test version:
+	uname -a 
+	uname -m   //32 or 64
+
+	lsb_release -a
+
+1/install
+	sudo apt-get install php5-odbc
+	sudo apt-get install libmyodbc
+	
+	a/test In Linux this is achieved by intalling the php5-odbc package:
+	 php -i | grep PDO
+	  # PDO
+	  # PDO support => enabled
+	  # PDO drivers => mysql, odbc
+	  # PDO Driver for MySQL => enabled
+	  # PDO_ODBC
+	  # PDO Driver for ODBC (unixODBC) => enabled
+	  
+2/ insstall
+	Install mdbtools-dev
+	sudo apt-get install mdbtools-gmdb 
+	apt-get install unixodbc libmdbodbc1 php5-odbc
+	sudo apt-get install unixODBC unixODBC-dev    //lib odbc
+	
+	note: don't know it use
+	sudo apt-get install mdbtools-gmdb 
+	
+3/ install (don't need)
+	pecl install mdbtools
+	shell# cd mdbtools-1.0.0
+	shell# phpize
+	shell# ./configure
+	shell# make
+	shell# make install
+4/Download new package  unixODBC-2.3.4.tar.gz (http://www.unixodbc.org/)
+ put /usr/local
+ use command: ./configure --prefix=/usr/local/unixODBC     in this folder to install
+ 
+ To conform with the GNU guidelines the odbcinst file is now installed by default in {prefix}/etc, this can be altered using the --sysconfdir option to configure. To install the files in the old default /etc you would run configure like this
+
+./configure --sysconfdir=/etc
+
+6/ configure two file  : reference to: https://gist.github.com/amirkdv/9672857
+  etc/odbc.ini
+	[mydb]
+		Description = Microsoft Access Try DB
+		Driver = MDBTools
+		Database = /var/www/html/apiCGT/dataupload/workingdata/CGTIL46.data
+		Servername = localhost
+		Username = 
+		Password = 
+		port = 5432
+		
+  etc/odbcinst.ini
+  [MDBTools]
+	Description=MDBTools Driver
+	Driver	=	/usr/lib/x86_64-linux-gnu/odbc/libmdbodbc.so
+	Setup	=	/usr/lib/x86_64-linux-gnu/odbc/libmdbodbc.so
+	FileUsage=1
+	UsageCount=1
+	
+	test command line:
+	isql -v mydb,  if ok like that:
+		Connected!                            |
+		|                                       |
+		| sql-statement                         |
+		| help [tablename]                      |
+		| quit                                  |
+		|       
+	view version :odbcinst -j
+	
+7/test php file
+	<?php
+	$query = 'SELECT * FROM user';
+	$mdb_file = '/var/www/html/apiCGT/dataupload/workingdata/CGTIL46.data';
+	$driver = 'MDBTools';
+	$dataSourceName = "odbc:Driver=$driver;DBQ=$mdb_file;";
+	try {
+		$connection = new PDO($dataSourceName);
+		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$result = $connection->query($query)->fetchAll(\PDO::FETCH_ASSOC);
+	print_r($result);
+	}catch(PDOException $e) {
+		echo $e->getMessage();
+	}
+
+	?>
+	
+	------------------- access in PDO----------- http://hoclaptrinhweb.org/lap-trinh/hoc-php/255-bai-11-thao-tac-voi-csdl-trong-php-thong-qua-pdo.html
+	
+	1/connect:
+	$dsn = 'mysql:host=localhost;dbname=ten_csdl';
+	// Set options
+	$options = array(
+	PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
+	PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+	);
+	// Create a new PDO instanace
+	try {
+	$db = new PDO($dsn, 'user_dang_nhap_csdl', 'password_csdl', $options);
+	}
+	// Catch any errors
+	catch (PDOException $e) {
+	echo $e->getMessage();
+	exit();
+	}
+	
+	2/Insert:
+	//Khởi tạo Prepared Statement
+	$stmt = $db->prepare('INSERT INTO users (name, email, age) values (:name, :mail, :age)');
+	$stmt->bindParam(':name', 'Nguyen Van A');
+	$stmt->bindParam(':mail', 'email_address');
+	$stmt->bindParam('age', 22);
+	$stmt->execute();
+	/*****************Cách viết khác *********************/
+	$stmt = $db->prepare('INSERT INTO users (name, email, age)
+	values (:name, :mail, :age)');
+	$data = array('name'=>'Nguyen Van A', 'mail'=>'email_address', 'age'=> 22);
+	$stmt->execute($data);
+	
+	Note: avoid injection:
+	Đầu tiên chúng ta sẽ tạo một Prepared Statement thông qua hàm prepare(). Ở đây chúng ta không truyền giá trị trực tiếp cho name, mail và age. Thay vào đó chúng ta sẽ sử dụng các place holder để giữ chỗ cho giá trị của các biến trên. Tiếp theo chúng ta tiến hành gắn giá trị cho các place holder vào câu lệnh Prepared Statement thông qua hàm 
+	bindParam($tên_place_holder, $giá_trị_của_place_holder). Cuối cùng chúng ta thực thi prepared statement thông qua lệnh execute().
+	
+3/Access Data:
+
+	Khi đọc dữ liệu từ database, PDO sẽ trả về dữ liệu theo cấu trúc mảng (array) hoặc đối tượng (object) thông qua các phương thức sau:
+
+	fetchAll([int $fetch_mode, fetch_argument]): trả về một mảng chứa tất cả các hàng trong tập kết quả trả về (result set). Một số giá trị phổ biến của fetch_mode:
+	PDO::FETCH_BOTH (default): trả về dữ liệu dạng mảng với key là tên của cột và cả số thứ tự của cột.
+	PDO::FETCH_ASSOC: trả về dữ liệu dạng mảng với key là tên cột của bảng trong CSDL.
+	PDO::FETCH_NUM: trả về dữ liệu dạng mảng với key là số thứ tự của cột.
+	PDO::FETCH_OBJ: trả về một đối tượng của stdClass với tên thuộc tính trong đối tượng là tên của cột.
+	PDO::FETCH_CLASS: Gán giá trị của từng cột cho từng thuộc tính (property/attribute) của một lớp được chỉ định trước.
+	fetch([int $fetch_mode]): trả về hàng kế tiếp từ result set.
+	fetchColumn([int $column_number = 0] ): trả về 1 giá trị của cột được chỉ định trong hàng kế tiếp của result set.
+	
+	$stmt = $db->prepare('SELECT name, email, age from users');
+	//Thiết lập kiểu dữ liệu trả về
+	$stmt->setFetchMode(PDO::FETCH_ASSOC);
+	$stmt->execute();
+	$resultSet = $stmt->fetchAll();
+	/*Trong trường hợp chưa setFetchMode() bạn có thể sử dụng
+	$resultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);*/
+	foreach ($resultSet as $row) {
+	echo $row['name'] . '\n';
+	echo $row['email'] . '\n';
+	echo $row['age'] . '\n';
+	}
+
+	-------------------------------------
+	To run a run scriptl=of linux by PHP
+	1/confiure php.ini
+		;disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,
+		allow_url_fopen=Off
+		allow_url_include=Off
+	2/run commnand visudo to edit find sudoer
+	 add these lines at last file:
+		www-data ALL=NOPASSWD: ALL
+		apache  ALL=NOPASSWD: ALL
+	3/Run test script
+	    php -r "echo exec('/var/www/html/apiCGT/rename.sh');"
+	4/run api:
+	<?php 
+		chdir("/var/www/html/apiCGT/dataupload/workingdata"); 
+		shell_exec('sudo /var/www/html/apiCGT/dataupload/workingdata/rename.sh');
+		?>
+	

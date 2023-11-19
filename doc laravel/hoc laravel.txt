@@ -1,0 +1,610 @@
+https://laravel.com/docs/master/authentication
+https://laravel.com/docs/5.0/authentication
+
+http://laravel-php.com/laravel-framework/laravel-co-ban/ung-dung-laravel-5-2-hoan-chinh-part-2/
+http://laravel-php.com/laravel-framework/laravel-co-ban/ung-dung-laravel-5-2-hoan-chinh-part-4/
+
+
+https://laravel.com/docs/5.1/queries
+http://vnfit.com/lap-trinh-laravel-5-tutorial-ve-lap-trinh-laravel-5/
+http://laravelviet.net/su-dung-blade-layouts-duoc-mo-rong-tu-templates/
+https://laravel.com/docs/5.0/authentication
+http://tutsnare.com/laravel-user-login-authentication-code-example/
+
+
+https://tuts.codingo.me/laravel-social-and-email-authentication
+http://hocphp.info/laravel-framework/
+https://laravel.com/docs/5.2/authentication
+https://laravel.com/docs/5.2/session
+https://laravel.com/docs/5.0/pagination
+https://laravel.com/docs/5.0/templates
+https://laravel.com/docs/5.2/middleware
+
+http://www.easylaravelbook.com/blog/2015/09/25/adding-custom-fields-to-a-laravel-5-registration-form/
+http://stackoverflow.com/questions/28957306/adding-form-fields-when-a-new-user-registers-with-application
+
+http://itsolutionstuff.com/post/laravel-5-import-export-to-excel-and-csv-using-maatwebsite-exampleexample.html
+
+
+php artisan make:controller HomeController
+php artisan make:model Posts
+
+php artisan make:migration posts
+php artisan migrate
+
+1/Create Session
+public function login()
+{
+    $cart = Session::get('cart'); //get the cart how you normally would (I am assuming it is in session)
+
+    Auth::login($user);  //login the user (I am assuming the users credentials are in an array variable)
+
+    Session::put('cart', $cart); //Store the cart in the new session to avoid your problem
+}
+ c2 : 
+http://www.neeks.co.uk/2015/08/12/laravel-5-actions-on-user-login/#sthash.c3uxMUzS.dpuf
+ Adding to the user session
+ 
+The way we found to reduce the amount of queries, on each page view, is to perform roles checks on user login and add the results into the session.
+
+First, go to app/Providers/EventServiceProvider.php and register your event listener.
+
+
+
+protected $listen = [ 
+	'auth.login' => [ 'App\Handlers\Events\AuthLoginEventHandler', ],
+ ]; 
+ 
+ Create the event listener you just registered, by running the following artisan command
+   php artisan event:generate
+   
+   Go to your file and add the magic to the handle method (app/Handlers/Events/AuthLoginEventHandler.php).
+public function handle() { 
+	$admin_value = (\Auth::user()->isAdmin()) ? 'Y' : 'N'; 
+	$treasurer_value = (\Auth::user()->isTreasurer()) ? 'Y' : 'N'; 
+	\Session::set('is_admin', $admin_value); 
+	\Session::set('is_treasurer', $treasurer_value); 
+	} 
+	
+You can then retrieve the session values on your view (or controller) like this:
+	VIEW: 
+	@if (Session::get('is_admin') == 'Y') 
+	echo "Hello admin"; 
+	@endif 
+
+	CONTROLLER: 
+	if(\Session::get('is_admin') == 'Y'){
+	 echo "Hello admin"; 
+	 } 
+------------
+
+2/Create layouts
+
+Mỗi trong HTML đều có những vùng, những phần tử ít khi thay đổi. Những phần tử đó như navigation bar, header, footer. Bởi vậy nên ta xây dựng một Blade layout
+Bước 1: Tạo một layout
+Tạo app/views/layouts/main.blade.php
+
+<html>
+ <head>
+   {{-- Common Header Stuff Here --}}
+  </head>
+   <div class="navigation">
+      @section('navigation')
+      <a href="/">Home</a>
+       <a href="/contact">Contact</a>
+     @show
+   </div>
+    <div class="container">
+    @yield('content')
+   </div>
+ </body>
+</html>
+
+Bước 2: Tạo file view được mổ rộng từ layout
+@extends('layouts.main')
+ 
+@section('content')
+  <p>
+    Here's your content
+  </p>
+@stop
+
+Mã html
+<html>
+  <head>
+  </head>
+  <body>
+    <div class="navigation">
+        <a href="/">Home</a>
+        <a href="/contact">Contact</a>
+    </div>
+    <div class="container">
+  <p>
+    Here's your content
+  </p>
+    </div>
+  </body>
+</html>
+
+Đầu ra nội dung của Blade section
+
+Thường ta sử dụng câu lệnh @yield
+@section('bottom')
+  This is the bottom
+@stop
+@section('top')
+  This is the top
+@stop
+@yield('top')
+@yield('bottom')
+---------
+
+
+--------------Cac goi ung dung trong laravel--------
+1/ Cài đặt Laravel HTML Package
+Các bạn có thể xây dựng view bằng HTML thông thường tuy nhiên 
+Laravel đã cung cấp một công cụ hỗ trợ là  Laravel HTML package để 
+có thể xây dựng các view một cách dễ dàng hơn.
+
+Để cài đặt các bạn vào console và trỏ đến thư mục ứng dụng rồi gõ lệnh:
+	composer require laravelcollective/html
+	
+	Tiếp theo các bạn vào file config/app.php 
+	  mảng providers them dòng lệnh sau: Collective\Html\HtmlServiceProvider::class,
+	  mảng aliases them :
+	  'Form' => Collective\Html\FormFacade::class,
+	  'HTML' =>Collective\Html\HtmlFacade::class,
+	 
+2. Sự hỗ trợ của Laravel với Authentication
+config/auth.php
+
+	php artisan make:auth : tao layout
+
+	php artisan make:auth  create homeController, wiew/auth/login.bade.php, ..update route
+	Trong AuthController de redirect ve home, them: protected $redirectTo = '/home';
+	Route::auth() #
+	The auth() method is a shortcut to defining the following routes:
+	// Authentication Routes...
+	$this->get('login', 'Auth\AuthController@showLoginForm');
+	$this->post('login', 'Auth\AuthController@login');
+	$this->get('logout', 'Auth\AuthController@logout');
+
+	// Registration Routes...
+	$this->get('register', 'Auth\AuthController@showRegistrationForm');
+	$this->post('register', 'Auth\AuthController@register');
+
+	// Password Reset Routes...
+	$this->get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
+	$this->post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
+	$this->post('password/reset', 'Auth\PasswordController@reset');
+	
+3/ Them field;  vao register form
+   add field:  firstname
+
+   -php artisan make:migration add_firstname_field_to_users_table
+   
+   -Open the newly created migration file and modify the "up method" to look like this:
+      Schema::table('users', function(Blueprint $table)
+        {
+            $table->string('firstname');
+        });
+	-Modify the "down method" to look like this:
+	Schema::table('users', function(Blueprint $table)
+	{
+		$table->dropColumn('firstname');
+	});
+	
+	-Run the migration and then open the resources/auth/register.blade.php form we created earlier in the chapter. 
+	Add a field for accepting the firstname:
+	
+	-app/Http/Controllers/Auth
+	   protected function validator(array $data)
+		{
+			return Validator::make($data, [
+			  'name' => 'required|max:255',
+			  'firstname' => 'required|unique:users',
+			  'email' => 'required|email|max:255|unique:users',
+			  'password' => 'required|confirmed|min:6'
+			]);
+		}
+		
+		protected function create(array $data)
+		{
+		  return User::create([
+			'name' => $data['name'],
+			'email' => $data['email'],
+			'firstname' => $data['username'],
+			'password' => bcrypt($data['password'])
+		  ]);
+		}
+		
+		-app/User.php
+		protected $fillable = ['name', 'email', 'password', 'firstname'];
+
+3/ lay thong tin user auth
+	Retrieving The Authenticated User
+
+	You may access the authenticated user via the Auth facade:
+
+	$user = Auth::user();
+	Alternatively, once a user is authenticated, you may access the authenticated user via an Illuminate\Http\Request instance. Remember, type-hinted classes will automatically be injected into your controller methods:
+
+	<?php
+
+	namespace App\Http\Controllers;
+
+	use Illuminate\Http\Request;
+
+	class ProfileController extends Controller
+	{
+		/**
+		 * Update the user's profile.
+		 *
+		 * @param  Request  $request
+		 * @return Response
+		 */
+		public function updateProfile(Request $request)
+		{
+			if ($request->user()) {
+				// $request->user() returns an instance of the authenticated user...
+			}
+		}
+	}
+	
+	Determining If The Current User Is Authenticated 
+		if (Auth::check()) {
+		// The user is logged in...
+	}
+	
+	4/Protecting Routes
+
+	Route middleware can be used to allow only authenticated users to access a given route. 
+	Laravel ships with the auth middleware, which is defined in app\Http\Middleware\Authenticate.php. 
+	All you need to do is attach the middleware to a route definition:
+
+	// Using A Route Closure...
+
+	Route::get('profile', ['middleware' => 'auth', function() {
+		// Only authenticated users may enter...
+	}]);
+
+		// Using A Controller...
+
+		Route::get('profile', [
+			'middleware' => 'auth',
+			'uses' => 'ProfileController@show'
+		]);
+		Of course, if you are using controller classes, you may call the middleware method from the controller's constructor instead of attaching it in the route definition directly:
+
+		public function __construct()
+		{
+			$this->middleware('auth');
+		}
+		Specifying A Guard
+
+		When attaching the auth middleware to a route, you may also specify which guard should be used to perform the authentication:
+
+		Route::get('profile', [
+			'middleware' => 'auth:api',
+			'uses' => 'ProfileController@show'
+		]);
+	5/Authentication Throttling
+		If you are using Laravel's built-in AuthController class, the Illuminate\Foundation\Auth\ThrottlesLogins 
+		trait may be used to throttle login attempts to your application.
+		<?php
+
+		namespace App\Http\Controllers\Auth;
+
+		use App\User;
+		use Validator;
+		use App\Http\Controllers\Controller;
+		use Illuminate\Foundation\Auth\ThrottlesLogins;
+		use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+
+		class AuthController extends Controller
+		{
+			use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+
+			// Rest of AuthController class...
+		}
+		
+		6/Manually Authenticating Users
+		We will access Laravel's authentication services via the Auth facade, so we'll need to make sure to import the Auth facade at the top of the class. Next, let's check out the attempt method:
+
+		<?php
+
+		namespace App\Http\Controllers;
+
+		use Auth;
+
+		class AuthController extends Controller
+		{
+			/**
+			 * Handle an authentication attempt.
+			 *
+			 * @return Response
+			 */
+			public function authenticate()
+			{
+				if (Auth::attempt(['email' => $email, 'password' => $password])) {
+					// Authentication passed...
+					return redirect()->intended('dashboard');
+				}
+			}
+		}
+		
+		Specifying Additional Conditions
+
+		If you wish, you also may add extra conditions to the authentication query in addition to the user's e-mail and password. For example, we may verify that user is marked as "active":
+
+		if (Auth::attempt(['email' => $email, 'password' => $password, 'active' => 1])) {
+			// The user is active, not suspended, and exists.
+		}
+	7/Accessing Specific Guard Instances
+	The guard name passed to the guard method should correspond to one of the guards configured in your auth.php configuration file:
+
+	if (Auth::guard('admin')->attempt($credentials)) {
+		//
+	}
+	
+	9/Logging Out
+
+		To log users out of your application, you may use the logout method on the Auth facade. This will clear the authentication information in the user's session:
+
+		Auth::logout()
+		
+	10/Remembering Users
+	
+	if (Auth::viaRemember()) {
+    //
+	}
+	
+	11/
+	Other Authentication Methods
+
+	Authenticate A User Instance
+
+	If you need to log an existing user instance into your application, you may call the login method with the user instance. The given object must be an implementation of the Illuminate\Contracts\Auth\Authenticatable contract. Of course, the App\User model included with Laravel already implements this interface:
+
+	Auth::login($user);
+	Of course, you may specify the guard instance you would like to use:
+
+	Auth::guard('admin')->login($user);
+	Authenticate A User By ID
+
+	To log a user into the application by their ID, you may use the loginUsingId method. This method simply accepts the primary key of the user you wish to authenticate:
+
+	Auth::loginUsingId(1);
+	Authenticate A User Once
+
+	You may use the once method to log a user into the application for a single request. No sessions or cookies will be utilized, which may be helpful when building a stateless API. The once method has the same signature as the attempt method:
+
+	if (Auth::once($credentials)) {
+		//
+	}
+	
+	----------------- Paginator--------------------
+	vao app/config/view.php
+	<?php
+		return array(
+			...
+			'pagination' => 'pagination::slider',
+		);
+		
+		pagination::slider Phương thức này sẽ cho chúng ta hiển thị các link phần trang đầy đủ
+        pagination::simple Phương thức này phân trang dưới link đơn giản chỉ có nút Next và Previous
+		
+	Trong model:
+	public function get_posts(){
+        $rsl = DB::table('users')
+            ->leftJoin('posts', 'users.id', '=', 'posts.author_id')
+            ->paginate(2);
+
+        return $rsl;
+    }
+	
+	Trong views
+	<div class="form-horizontal"> {{$data->render()}}</div>
+	Appending To Pagination Links
+	<?php echo $users->appends(['sort' => 'votes'])->render(); ?>
+	This will generate URLs that look something like this:
+
+	http://example.com/something?page=2&sort=votes
+	
+	Cac ham trong paginator
+		currentPage
+		lastPage
+		perPage
+		hasMorePages
+		url
+		nextPageUrl
+		firstItem
+		lastItem
+		total
+		count
+		
+  //Links
+  <a href="user/userdetail?id={{$item->id}}">{{$item->name}}</a>
+  Tham so 
+  <?php 
+  $url = "user/userdetail?id=".$item->id;
+  ?> 
+  <a href="{{ url($url)}}">{{$item->name}}</a>
+  <a href="{{ url('user/userdetail')}}">{{$item->name}}</a>
+  1/Generating a HTML Link to a Controller Action
+  Use the HTML::linkAction() method.
+
+	Note that the controller and action you specify must exist AND there must be a reference to it somewhere in your app/routes.php file.
+
+	The simplest form is a single argument, the controller@action.
+	
+	{{ HTML::linkAction('Home@index') }} 
+	    -><a href="http://your.url/index">http://your.url/index</a>
+	{{ HTML::linkAction('Home@index', 'Home') }}
+		-><a href="http://your.url/index">Home</a>
+	{{ HTML::linkAction('ItemController@show', 'Show Item #3', array(3)) }}
+		-><a href="http://your.url/items/3">Show Item #3</a>
+	{{ HTML::linkAction('Home@index', 'Home', array(), array('class' => 'btn')) }}
+		-><a href="http://your.url/index" class="btn">Home</a>
+  
+  -----------
+  2/Generating a HTML Link to a Named Route
+  {{ HTML::linkRoute('login') }} 
+  depending on your app/routes.php file, this may output something like.
+	-><a href="http://your.url/user/login">http://your.url/user/login</a>
+ {{ HTML::linkRoute('login', 'Sign In') }}
+	-><a href="http://your.url/user/login">Sign In</a>
+ {{ HTML::linkRoute('items.show', 'Show item #4', array(4)) }}
+    -> <a href="http://your.url/items/4">Show item #4</a>
+ {{ HTML::linkRoute('login', 'Sign In', array(), array('class' => 'btn')) }}
+    -><a href="http://your.url/user/login" class="btn">Sign In</a>
+  
+  ------------------------
+  Example :
+  http://zrw2014vorsorge.dev/spiel/index?term=termb&link=type
+  You can use named routes:
+  Route::get('spiel', array('as' => 'spiel.index', 'uses' => 'SpielController@getIndex'));
+
+	//then
+	$u = URL::route('spiel.index', array(
+	  'term' => 'termb',
+	  'link' => 'type'
+	));
+	
+	 OR
+	 $params = array('term' => 'termb', 'link' => 'type');
+	$queryString = http_build_query($params);
+	$u = URL::to(action('SpielController@getIndex') . '?' . $queryString);
+	-----------
+  
+  
+  {{ URL::action('HomeController@logininto') }}
+  URL::action('UsersController@show', array('123') )
+  {!! link_to_route('songs.index', ['title'=>$song->title, 'slug'=>$song->slug])  !!}
+  Trong rout:
+  {!! route('songs.index', ['title'=>$song->title, 'slug'=>$song->slug])  !!}
+  //get parameters
+  Request $request
+  $allRequest = $request->all();
+  
+  $category = Input::get('category', 'default category');
+  $term = Input::get('term', false);
+  
+  ----------------- View image----------
+ view {!! Html::image('assets/img/h1.jpg') !!}
+ java: $("#img-ajax").html('{{HTML::image('assets/img/h2.jpg')}}');
+  
+  ------------------link js css------------
+  You can just pass the path to the style sheet .
+
+{!! HTML::style('css/style.css') !!}
+<link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" >
+You can just pass the path to the javascript.
+
+{!! HTML::script('js/script.js'); !!}
+<script src="{{ URL::asset('assets/script/plugins/jquery-1.11.0.min.js') }}" type="text/javascript"></script>
+
+------
+composer update
+---------------------
+12/ remove Csrf
+	Override method tokensMatch để không sử dụng token khi gửi request JSON
+
+	Mặc định thì middleware app/Http/Middleware/VerifyCsrfToken.php sẽ ngăn cản chúng ta thực hiện request nếu không sử dụng token nhằm tránh kiểu tấn công CSRF. Do đó chúng ta tạm thời bỏ tính năng này bằng cách ghi đè method tokensMatch mà VerifyCsrfToken.php thừa kế từ BaseVerifier như sau:
+
+
+	protected function tokensMatch($request)
+	{
+		if ($request->wantsJson()) {
+				return true;
+		}
+		return parent::tokensMatch($request);
+	}
+	
+	---------- redirect route action with parameters
+	return redirect('yourRoute')->with('param', 'value');
+	
+	Session::get("parameters");
+	
+13/	------------------Auth session killed after redirect | laravel 5.2---------
+	your AuthController must use the middleware routes where it creates a session for you. As of now, only your DashboardController does that , which is the reason by authenticated session does not persist.
+	
+		Route::group(['middleware' =>[ 'web']], function () {
+		Route::get('/login', ['as' => 'login', 'uses' => 'Auth\AuthController@getLogin']);
+		Route::post('/login', ['as' => 'login', 'uses' => 'Auth\AuthController@postLogin']);
+		});
+
+	Route::group(['middleware' => ['web','auth']], function () {
+			Route::get('/dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@getIndex']);
+		});
+		
+		My custom: Route
+		
+		Route::group(['middleware' =>[ 'web']], function () {
+		Route::get('/login1', ['as' => 'login1', 'uses' => 'Login1Controller@getLogin']);
+		Route::post('/login1', ['as' => 'login1', 'uses' => 'Login1Controller@postLogin']);
+	});
+
+	Route::group(['middleware' => ['web','auth']], function () {
+		Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
+	});
+	
+	Contoller: Login1Controller 
+	protected $redirectPath = '/home';
+    public function getLogin() {
+        return view('loginto.login1');
+    }
+	public function(){
+	$email = $request->input('email');
+        $password = $request->input('password');
+
+        if( Auth::attempt(['email' => $email, 'password' =>$password])) {
+            $user = Auth::user();           
+             return redirect()->intended('home');
+        } else {
+            $errors = new MessageBag(['errorlogin' => 'Email hoặc mật khẩu không đúng']);
+            return redirect()->back()->withInput()->withErrors($errors);
+        }
+		}
+		
+    Controller: HomeController
+	 public function __construct()
+    {
+        $this->middleware('auth');
+        
+    }
+	
+	 public function index(Request $request)
+    {        
+        $user = Auth::user();
+        $mPosts = new Posts();
+        $data = $mPosts->get_posts();
+        return view('home')->with('data',$data);
+    }
+	View: loginto/login1
+				<form action="{{url('login1')}}" method="POST" role="form">
+			<input type="hidden" name="_token" value="{{ csrf_token() }}">
+			<div class="form-group">
+				<label>User:</label>
+				<input class="form-control" type="text" name="email">
+			</div>
+
+			<div class="form-group">
+				<label>Password:</label>
+				<input class="form-control" type="password" name="password">
+			</div>
+
+			<button class="btn btn-primary">Submit</button>
+		</form>
+		
+		--------logout-----------
+		public function logout()
+		{
+			Auth::logout();
+			Session::flush();
+			return redirect('/');
+		}
+		-------------return json-----------
+		return response()
+            ->json(['name' => 'Abigail', 'state' => 'CA']);
+			

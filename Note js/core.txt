@@ -1,0 +1,187 @@
+ https://daynhauhoc.com/t/nhung-kinh-nghiem-voi-lap-trinh-android-phan-i/11228/3
+ 
+ Connect MS ACCESS in php on linux
+ https://www.quora.com/How-do-I-connect-a-database-in-PHP-with-MS-Access-thats-hosted-on-Linux
+  Connect MS ACCESS in php on window
+ https://www.sitepoint.com/using-an-access-database-with-php/
+ 
+ 
+ 
+ $view->setTerminal(true);
+ ----------------
+ $inventoyIDs = implode(',',$inventoryIDList); 
+ $select->where("InventoryID IN ($inventoyIDs) AND StatusID=1");
+----------
+$select->where->in('i.StatusID',array(0,8,9));
+$select->where('saleiv.SaleOrderID is NULL');
+// SELECT "foo".* FROM "foo" WHERE "c1" IS NULL AND "c2" IN (?, ?, ?) AND "c3" IS NOT NULL
+$select->from('foo')->where(array(
+    'c1' => null,
+    'c2' => array(1, 2, 3),
+    new \Zend\Db\Sql\Predicate\IsNotNull('c3')
+));
+
+use Zend\Db\Sql\Where;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Expression;
+$where = new \Zend\Db\Sql\Where();
+        $where
+            ->nest()
+            ->equalTo('i.CoinID',$id)
+            ->equalTo('i.StatusID',0)
+            ->or
+            ->equalTo('i.CoinID', $id)
+            ->equalTo('i.StatusID', 9)
+            ->equalTo('gi.GradingOrderID', $goid)
+            ->unnest();
+        $select->where($where);
+		--------------------------
+		<a href="<?php echo $this->url('purchase', array('action' => 'view-mode-formpurchase'), array('query' => array('id' => $puchaselist->PurchaseOrderID))); ?>"
+		
+		getRequest()->getPost()
+		
+		$this->params()->fromQuery('print');
+		
+		------------- number format php------
+		number_format($this->overallTotal, 2, '.', '');
+		
+		--------------
+		//$objPHPExcel->getActiveSheet()->getStyle('H'.$row)->getNumberFormat()->setFormatCode('#,##0.00_-');
+		$objPHPExcel->getActiveSheet()->getStyle('H'.$row)->getNumberFormat()->setFormatCode('"$"#,##0.00_-');
+		
+		---------- middle align-------------
+		.valign{
+                height: 100%;vertical-align: middle;display: table-cell;
+				}
+		<td style="text-align: left; vertical-align: middle;height: 38px">
+		<span style="width:38px; margin-right: 5px;" class="valign">
+		</td>
+		--------------- redirect to another view-------
+		$this->redirect()->toRoute("login");
+		$col1 = $this->params()->fromQuery('cl1', '');
+		----------------------------------------------------
+		
+       If you want to change the actual layout view file you can do this inside your controller:
+	   if($this->getRequest()->isXmlHttpRequest()) {
+       $this->layout('layout/ajax-layout');
+	   
+	   If you want to change the view used by the current view model / action you can do this inside your controller/action:
+	   $viewModel = new ViewModel(array(
+    'form'      => $form
+    'something' => $something
+	));
+	$viewModel->setTemplate('mymodule/newview.phtml');
+
+	return $viewModel;
+}
+
+echo $this->url('purchase', array('action' => 'view-mode-formpurchase'), array('query' => array('id' => $puchaselist->PurchaseOrderID))); ?>
+ echo $this->url('inventory', array('action' => 'inventorydetail', 'id' =>$resultInfo->InventoryID)); ?>" 
+$this->redirect()->toRoute("grading"); 
+ ------------------- break page to print-------------
+  <style type="text/css" media="print">
+      div.page
+      {
+        page-break-after: always;
+        //page-break-inside: avoid;
+      }
+    </style>
+------------------ redirect-----------
+	$this->redirect()->toRoute('inventory', array(
+					'controller' => 'InventoryControler',
+					'action' =>  'inventorydetail',
+					'id' =>$idivt,
+				));
+	config  file:
+	Then, setting the parameter in module.config.php
+
+		'myaccount' => array(
+			'type' => 'Segment',
+			'options' => array(
+			'route'    => '/myaccount[/:action][/:param1][/:param2]',
+			'defaults' => array(
+					'controller' => 'Main\Controller\MyAccount',
+					'action'     => 'index',
+				),
+			),
+		),
+-----------------
+typeof Buyer !=='undefined' && typeof Buyer !==undefined &&  Buyer.length > 0 
+----------------------------------------------------------------------------
+@page
+{
+    size: landscape;   /* auto is the initial value */
+    margin: 0mm;  /* this affects the margin in the printer settings */
+}
+--------------------------------------------------------------------
+http://zf2cheatsheet.com/
+Different layout file for different controller.
+//module.php
+public function init(ModuleManager $moduleManager){
+    $sharedEvents = $moduleManager->getEventManager()->getSharedManager();
+    $sharedEvents->attach(__NAMESPACE__, 'dispatch', function($e) {
+        $controller = $e->getTarget();
+        if ($controller instanceof Controller\FrontEndController) {
+            $controller->layout('layout/front');
+			
+        }
+    }, 100);
+}
+
+-------------last date of month-----------------
+$last_day_april_2010 = date('m-t-Y', strtotime('April 21, 2010'));
+
+    Y gives you the 4-digit year from the timestamp ('2010')
+    m gives you the numeric month from the timestamp, with a leading zero ('04')
+    t gives you the number of days in the timestamp's month ('30')
+	
+--------- Number of week and first date of week-----------
+
+        $year = 2015;
+        $week_no = 1;
+
+        $date = new \DateTime();
+        $date->setISODate(2017,15);
+        $l=[];
+        echo $date->format('M-d-Y');
+        for($i=0;$i<7;$i++){
+            $l[$i] = $date->format('M-d-Y');
+            $date->add(new \DateInterval('P1D'));
+        }
+        //print_r($l); echo "</br>";
+        $number = date( 'W', strtotime( "2017-04-10 + 1 day" ) );
+        //print_r($number);
+        //die();
+		
+--------------- Style export excel------------
+   $styleArray = array(
+        'font'  => array(
+            "name" => "Times New Roman",
+            "bold" => true,
+            "italic" => false,
+            "size" => 12
+        ));
+$objPHPExcel->getActiveSheet()->getStyle('A2')->applyFromArray($styleArray);
+
+$format_caption =& $workbook->addFormat(array('size' => 11, 'fontFamily' => 'Calibri', 'numformat' => '@', 'bold' => 1, 'left' => 1, 'top' => 1, 'bottom' => 1, 'right' => 1, 'vAlign' => 'vcenter', 'align' => 'center', 'fgcolor' => 50));
+
+$format_caption -> setTextWrap();
+---------------//------------------
+http://oxford.edu.vn/goc-tieng-anh/hoc-tieng-anh-cung-oxford/tinh-tu-trong-tieng-anh-adjective-661.html
+https://vndoc.com/cach-thanh-lap-tinh-tu-ghep-trong-tieng-anh/download
+
+http://kenhtuyensinh.vn/tu-ghep-trong-tieng-anh
+
+http://oxford.edu.vn/goc-tieng-anh/hoc-tieng-anh-cung-oxford/ngu-phap-tieng-anh-gioi-tu--preposition-phan-i-308.html
+https://elight.edu.vn/cac-loai-gioi-tu-trong-tieng-anh
+
+http://vobmapping.vn/cac-su-dung-dong-tu-nguyen-mau/
+
+http://kenhtuyensinh.vn/menh-de-quan-he-relative-clauses
+
+https://kipalog.com/posts/Gioi-thieu-series-hoc-lap-trinh-Angular--Angular-2
+https://techmaster.vn/posts/34234/bat-dau-voi-angular-2-tung-buoc-mot-1-component-dau-tien-cua-ban
+https://kipalog.com/posts/Gioi-thieu-series-hoc-lap-trinh-Angular--Angular-2
+https://stackoverflow.com/questions/4223977/send-file-via-curl-from-form-post-in-php
+
+Hoi*)chi7

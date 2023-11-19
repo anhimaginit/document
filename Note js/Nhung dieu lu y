@@ -1,0 +1,1163 @@
+﻿https://jqueryui.com/draggable/
+http://icolor.vn/kien-thuc/y-nghia-mau-sac/nguyen-tac-phoi-mau!!.html
+http://stackoverflow.com/questions/14804941/how-to-add-smooth-scrolling-to-bootstraps-scroll-spy-function
+http://www.w3schools.com/css/css_rwd_images.asp
+http://www.w3schools.com/w3css/w3css_slideshow.asp
+
+
+
+admin->client->Client Master List
+wdata\application\modules\admindashboard\views\scripts\client\client-master-list.phtml
+
+Note: EDIT button
+form id="frmClientList" onsubmit="jQuery('#cmdEdit').click();return false;">  
+
+<input type="button" class="link_button middle_button" value="Edit" id="cmdEdit" />
+
+-----------
+if (strpos($authData['login'], "|pmContext=") !== FALSE) {
+            $parts = explode("|pmContext=", $authData['login'], 2);
+            $authData['login'] = $parts[0];
+            $this->contextId = Core_Caspio::caspioEscape($parts[1]);
+        }
+
+--
+	                $info = pathinfo($fname);
+	                $fname = uniqid($info['filename'] . '_');
+	                $fname = $fname . '.' . $info['extension'];
+	                $fdata = file_get_contents($_FILES[$id]['tmp_name']);
+
+-------------
+
+ham luu : $contents= file_get_contents('http://mydomain.com/folder/image.jpg');
+
+-------------------------
+Lay du lieu tu Form bang JQ
+
+var techid = jQuery.trim(jQuery("#createDetailsForm #edit_Tech_ID").val());
+var Headline = jQuery('#createDetailsForm #edit_Headline').val();
+var City = jQuery('#createDetailsForm #edit_City').val();
+var State = jQuery('#createDetailsForm #edit_State option:selected').val();
+var Zipcode = jQuery('#createDetailsForm #edit_Zipcode').val(); 
+
+Lay du lieu tu Form bang JQ va chuyen den Form khac. Tren Form nhan du lieu dung Request de lay
+
+
+var projectid = $("#createDetailsForm #edit_Project_ID option:selected").val(); 
+var route = $("#createDetailsForm #edit_Route").val(); 
+var woid=$("#createDetailsForm #edit_WO_ID").val();//14289 
+$.ajax({ 
+type: "POST", 
+url: '/widgets/dashboard/popup/fs-route-buider', 
+data: {projectid:projectid,woid:woid,route:route,company:window._company}, 
+context : this, 
+success:function( html ) 
+
+FSWidgetWODetails.prototype.CreateWoNew = function(){ 
+//14320 
+disablePopup(); 
+//End 14320 
+this._updatestatus = {success:1, errors:[]}; 
+FSMultiselectControl.submit (); 
+params = $('#createDetailsForm').serialize(); 
+params.company = window._company; 
+// alert(params); 
+if(typeof(tinyMCE.get('edit_Description')) !== 'undefined') 
+params += "&Description="+encodeURIComponent(tinyMCE.get('edit_Description').getContent()); 
+if(typeof(tinyMCE.get('edit_Requirements')) !== 'undefined') 
+params += "&Requirements="+encodeURIComponent(tinyMCE.get('edit_Requirements').getContent()); 
+if(typeof(tinyMCE.get('edit_SpecialInstructions')) !== 'undefined') 
+params += "&SpecialInstructions="+encodeURIComponent(tinyMCE.get('edit_SpecialInstructions').getContent()); 
+if(typeof(tinyMCE.get('edit_Ship_Contact_Info')) !== 'undefined') 
+params += "&Ship_Contact_Info="+encodeURIComponent(tinyMCE.get('edit_Ship_Contact_Info').getContent()); 
+if(typeof(this.ServiceSchedule) !== 'undefined' && this.ServiceSchedule !== "") params += this.ServiceSchedule !== ""?"&ServiceSchedule="+Base64.encode(this.ServiceSchedule):""; 
+if($("#CreatedType1").is(":checked")) //kiem tra nut Radius tren form ?
+params += "&createtype=1"; 
+else if($("#CreatedType2").is(":checked")) 
+params += "&createtype=2"; 
+else if($("#CreatedType3").is(":checked")) 
+params += "&createtype=3"; 
+else if($("#CreatedType4").is(":checked")) 
+params += "&createtype=4"; 
+$.ajax({ 
+url : '/widgets/dashboard/details/do-create/',               //goi den controller de xu ly
+dataType : 'json', 
+data : params, 
+cache : false, 
+type : 'post', 
+context : this, 
+error : function (data, status, xhr){ 
+//console.log (data, status, xhr); 
+}, 
+success : function (data, status, xhr){ 
+//alert('createtype: ' + data.createtype); 
+detailsWidget._updatestatus = data; 
+if (data.success) 
+{ 
+detailsWidget._redirect = true; 
+//detailsWidget._redirect = false; 
+detailsWidget.params.win = data.win; 
+fileFields = $('#UploadWOPicsNew input:file'); 
+fileFieldCount= fileFields.length; 
+for ( var i = 1; i <= fileFieldCount; i++ ) 
+{ 
+if ( $('#PicWO'+i).val() && $('#PicWO'+i).val() !== '' ) 
+{ 
+detailsWidget._uploadsCounter++; 
+detailsWidget.asyncUploadFile('WO'+i); 
+} 
+} 
+var signoffFile = $("#UploadCustomSignOff input:file").val(); 
+if (signoffFile) 
+{ 
+detailsWidget._uploadsCounter++; 
+detailsWidget.asyncUploadFile ("CustomSignOff"); 
+} 
+if ( detailsWidget._uploadsCounter <= 0 ) 
+{ 
+if($("#CreatedType1").is(":checked")) 
+detailsWidget._updatestatus["createtype"]=1; 
+else if($("#CreatedType2").is(":checked")) 
+detailsWidget._updatestatus["createtype"]=2; 
+else if($("#CreatedType3").is(":checked")) 
+detailsWidget._updatestatus["createtype"]=3; 
+else if($("#CreatedType4").is(":checked")) 
+detailsWidget._updatestatus["createtype"]=4; 
+$.fancybox.close(); 
+detailsWidget.showMessages(detailsWidget._updatestatus);  // chuyen den ham show Massage
+} 
+} 
+else 
+{ 
+$.fancybox.close(); 
+detailsWidget.showMessages(detailsWidget._updatestatus); 
+} 
+} 
+}); 
+};
+ 
+
+FSWidgetWODetails.prototype.showMessages = function(data) 
+{ 
+var html = ''; 
+if (data.success) 
+{ 
+html += '<div class="success"><ul><li>Success!</li></ul></div>'; 
+if (window.opener) 
+{ 
+try 
+{ 
+window.opener.reloadTabFrame(); 
+} 
+catch (e) 
+{} 
+} 
+win = data.win; 
+if (this.currentTab === 'create') 
+{ 
+if(data.createtype===3) 
+{ 
+window.location.replace('/clients/createWO.php?v='+window._company); 
+} 
+else if(data.createtype===4) 
+{ 
+window.location.replace('/clients/createWO.php?v='+window._company+'&pid='+$("#edit_Project_ID option:selected").val()+'&rn=' + encodeURIComponent($("#edit_Route").val())+'&scb=no'); 
+// chuyen den link nay de xu ly tiep du lieu, Ajax se xu ly va tra lai cho controller, view se hien thi du lieu nay
+} 
+else 
+{ 
+window.location.replace('/clients/wosDetails.php?v='+window._company+'&id='+this.params.win+'&sectionTab='+this._sectionTab+'&publish=' + this.publish); 
+} 
+} 
+else 
+{ 
+window.location.replace(location.href); 
+} 
+
+ .....}
+-----------------------------------------------
+
+Issue 14294
+
+var element = $('#edit_'+index);
+var value = data[index]?data[index]:''; color: #fff;');  //14294 
+
+if (value==1) {
+                            $('#edit1_AllowDeVryInternstoObserveWork').attr('checked',true); 
+
+if (value) $(element).val(value);
+if(index == 'Amount_Per' && value == 'Visit') 
+$("#edit_PayMax").removeAttr("readonly");    //14294  
+$("#edit_PayMax").attr('style','background-color: #fff;');  //14294 
+
+var edit_Qty_Devices = $("#edit_Qty_Devices").val()?parseFloat($("#edit_Qty_Devices").val()):0; 
+
+ var mult = $("#edit_Amount_Per option:selected").val(); 
+
+        var checked = jQuery("#ContentServiceSchedule .removeVisit:checked").length;  
+
+$('#edit_Amount_Per').attr('title', $('#edit_Amount_Per option:selected').text());
+if($('#edit_Amount_Per option:selected').val()=='Visit'){ 
+
+$("#userRole_add option[value='"+roleid+"']").prop("selected", "selected");
+----------------------------------------------------------------------
+ Database : Select 
+
+$db = Core_Database::getInstance();  
+        $select = $db->select();
+        $select->from(array('t'=>'fstags'),array('*'));
+        $select->joinLeft(array('tc'=>'fstag_clients'),
+            'tc.FSTagId = t.id',
+            array('DisplayOrder'=>"(CASE WHEN (t.VisibilityId = 1 AND tc.CompanyId = '$companyID') THEN 1 WHEN (t.VisibilityId = 2) THEN 2 ELSE 3 END)")
+        );
+        $select->where("t.Active = 1");
+        //14227
+        $select->where("t.TagType = 1");
+        $select->where("t.isgrouptag = 0");
+$select->group("t.id");//13839
+        $select->order("t.Title ASC");
+        $select->distinct();
+
+	  $records = Core_Database::fetchAll($select);   
+
+if ($_SESSION['loggedIn'] != "yes" || $_SESSION['loggedInAs'] != "client")   
+
+-----
+14258
+
+lay gia tri nut RADIUS
+$(".rptType").each(function() {
+if ($(this).is(":checked"))
+{
+reportType = $(this).val();
+}
+}); 
+
+----------------
+14258
+return privious page
+<a href="<?php echo $_SERVER['HTTP_REFERER'];?>">Back to List</a>
+-----------------------
+ $db = Zend_Registry::get("DB");
+    $select = $db->select();
+    $select->from(Core_Database::TABLE_TECH_BANK_INFO, 
+        array('TechID', 'FLSID', 'FirstName', 'LastName', 'Address1','Address2','City','State','ZipCode','PrimaryPhone','SecondaryPhone','FLSWhse'));
+    $select->where("TRIM(AcceptTerms) = 'Yes'");
+    $select->where("Deactivated != 1");
+    $select->where("FLSBadge != 1");
+    $select->where("TRIM(FLSstatus) = 'Trained'");
+    $records = $db->fetchAll($select);   
+
+    // Counts # of records returned
+    $count = sizeof($records);
+
+    // Populate array with Tech info
+    foreach ($records as $rec) {
+        $TechID = $rec['TechID'];    
+	    $FLSID = $rec['FLSID'];
+	    $FirstName = $rec['FirstName'];
+	    $LastName = $rec['LastName'];
+	    $Address1 = $rec['Address1'];
+        $Address2 = $rec['Address2']; 
+        $City = $rec['City'];
+        $State = $rec['State'];
+        $ZipCode = $rec['ZipCode'];
+        $FLSWhse = $rec['FLSWhse'];
+        
+        echo "<tr class='wosRow'>";
+        echo "<td>$TechID</td>";
+        echo "<td>$FLSID</td>";
+        echo "<td>$FirstName</td>";
+        echo "<td>$LastName</td>";
+        echo "<td>$Address1</td>";
+        echo "<td>$Address2</td>";
+        echo "<td>$City</td>";
+        echo "<td>$State</td>";
+        echo "<td>$ZipCode</td>";
+        echo "<td>$FLSWhse</td>";
+        echo "</tr>";
+    }
+	---------
+	Kiem tra  GMP ?
+	// if($this->isGPM){  
+}	
+
+    -------------------
+	FANCY BOX
+	
+	$.fancybox({
+                        'padding':'20px',
+                        'content':$('#xlsListDownload').html(),
+                        'width': '500px',
+                        'height': 'auto',
+                        'autoScale': false,
+                        'transitionIn': 'fade',
+                        'transitionOut': 'fade',
+                        'onComplete':function(){
+                            $('.xlsDownload').click(function(event){
+                                event.preventDefault();
+                                var offset = $(this).attr('name');
+                                var limit  = $(this).attr('data-id');
+                                document.location = 'ExportReportViewToFile.php?Ext=' + Ext + "&rptid=" + $("#rptid").val()
+                                    + '&txtTemplateName=' + reportname + sortData + filterparam + arrangecol+'&xlsOffset='+offset+'&xlsLimit='+limit;
+                            })
+                        }
+                    });
+-----------
+
+Debug ngay tren may ve java
+Console
+$.ajax({
+			url: "/widgets/dashboard/popup/get-wo-info/",
+			type: 'POST',
+			context: document.body,
+			dataType: "json",
+			data: {
+				WIN_NUM: '345983',
+				company: 'FLS'		
+			},
+			success: function(data) {
+alert(data.woInfo[0].WIN_NUM);  
+			}
+			})
+--------------------------
+14366  
+khi view la trong dashboard: widgets/dashboard/do/get-tech-info/
+	
+<?=$this->partial('/tech/update.phtml', 'dashboard', $this)?>
+---------------------------
+//14415 
+        $apiWosClass = new Core_Api_WosClass();
+        $auth =  $_SESSION['Auth_User'];      //print $_SESSION to find parameters 
+        $user = new Core_Api_User();
+        $user = $user->load(
+             array(
+                 'login' => $auth['login'],
+                 'password' => $auth['password']
+             )
+         );
+        $client_id = $user->getClientId();
+        //end14415  
+		
+//Second way to get  $auth
+------
+//  Check authentication
+        $auth = new Zend_Session_Namespace('Auth_User');
+        $this->_login    = $auth->login;
+        $this->_password = $auth->password;
+        $this->_userType = $auth->userType;
+		$this->_loggedInAs = $auth->loggedInAs;
+        unset($auth);//
+		---
+		$user = new Core_Api_User();
+		$user = $user->load(
+			array(
+				'login' => $this->_login,
+				'password' => $this->_password
+			)
+		);
+------
+ //  14415   Count unread messages 
+                             $Unread_QA_fromTech = $apiWosClass->getNum_ofUnseen_QA_fromTech($client_id,$winNum);
+                             if($Unread_QA_fromTech > 0){
+                                 if($Unread_QA_fromTech == 1) {
+                                     $field = $Unread_QA_fromTech.' Unread Message ';           
+                                     $fieldHTML = '(&#160;<span style="color:red;">'.$Unread_QA_fromTech.'</span>&#160;)<span> <a id="QAbox'.$winNum.'"  href="javascript:;" class="ClientQABtn" title="" style="text-decoration: underline;" WIN_NUM='.$winNum.' >Q&amp;A</a></span><br /> ' ;      
+                                 } else {                                                                    
+                                     $field = $Unread_QA_fromTech.' Unread Messages ';           
+                                     $fieldHTML = '(&#160;<span style="color:red;">'.$Unread_QA_fromTech.'</span>&#160;)<span> <a id="QAbox'.$winNum.'"  href="javascript:;" class="ClientQABtn" title="" style="text-decoration: underline;" WIN_NUM='.$winNum.' >Q&amp;A</a></span><br /> ' ;                   
+                                 }
+                             }else {
+                                 $field = "0 Unread Messages ";    
+                                 $fieldHTML = '<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a id="QAbox'.$winNum.'"  href="javascript:;" class="ClientQABtn" title="" style="text-decoration: underline;" WIN_NUM='.$winNum.' >Q&amp;A</a></span><br /> ' ;
+                             }
+                             // end 14415  
+
+$fieldHTML = '(&#160;<span style="color:red;">'.$Unread_QA_fromTech.'</span>&#160;)<span> <a id="QAbox'.$winNum.'"  href="javascript:;" class="ClientQABtn" title="" style="text-decoration: underline;" WIN_NUM='.$winNum.' >Q&amp;A</a></span><br /> ' ; 							 
+
+-----------
+truyen param cho ajax
+---------------------------
+14466
+	 //////////////////////////
+                    var totalDuration = 0;
+                    var visitcancelDuration = 0;
+                    var aftemp = 0;
+                    var afVisit = 0;
+                    if($("#AfterHoursRate").is(":checked")){                        
+                        $("#ContentServiceSchedule .serviceSchedulForVisit").each(function(){
+                            var startDate = $(this).find(".StartDate").val();
+                            var startTime= $(this).find(".StartTime").val();  
+                            var endDate = $(this).find(".EndDate").val();
+                            var endTime = $(this).find(".EndTime").val(); 
+                             aftemp =  aftemp + caculateAH(startDate, startTime, endDate, endTime, ahFromTime, ahToTime)
+                        });
+                        
+                        $(".removeVisit").each(function(){
+                             var startDate = $(this).find(".StartDate").val();
+                             var startTime= $(this).find(".StartTime").val();  
+                             var endDate = $(this).find(".EndDate").val();
+                             var endTime = $(this).find(".EndTime").val(); 
+                              afVisit =  aftemp + caculateAH(startDate, startTime, endDate, endTime, ahFromTime, ahToTime)
+                        });
+                        totalDuration  = aftemp - afVisit;
+                        totalDuration = totalDuration===0?0:totalDuration ;
+                        
+                        afterHourDay =  totalDuration * AfterHoursRateRatePerHour;
+
+                    }
+                    else {
+                        afterHourDay = 0;  
+                    }
+                    ////////////////////////////////
+-----------------------------------
+ <select  tabindex="0" size="1" style="width:150px;" name="MaxAddedHoursAllowed" id="MaxAddedHoursAllowed">
+                                                        <option value="0">Set Max Added Hours</option>
+                                                        <?php
+                                                           for($i=1;$i<= 160; $i++){
+                                                               $selected = '';
+                                                               if($this->wo->MaxAddedHoursAllowed == $i)
+                                                               {
+                                                                   $selected = "selected = 'selected'";
+                                                               } else {
+                                                                   $selected = '';    
+                                                               }
+                                                               echo "<option value='".$i."' $selected > " .$i. "</option> ";
+                                                           }
+                                                       ?>
+                                                </select>  
+---------
+<input type="checkbox" id="AfterHoursRate" name="SetAfterHoursRate" <?php if($this->wo->SetAfterHoursRate == 1) echo 'checked';?> /><span style="padding-left:5px"><img id="AfterHoursRateInfor" class="" width="16px" height="16px" title="" bt-xtitle="" src="/widgets/images/FAQi.png" style="vertical-align: middle;cursor: pointer;"></span>	
+var data = "rptid=" + rptid + "&v=" + v + "&template=" + template + "&reporttable=" + reporttable + "&reportname=" + template;
+
+----------------
+    //14527
+        $("#statusWO").change(function(){
+            var status = $("#statusWO").val();
+            var rest = status.slice(1);
+            var getFirstChar = status.substr(0,1);
+            getFirstChar = getFirstChar.toUpperCase();
+            var statusText = getFirstChar.concat(rest);
+            if(status==='work_done'){var statusText = ""; statusText = "Work Done";}
+            $("div#statusWO1").append("<div style='padding-left:20px'><img class='cmdremove' height='15px' wostatusid='"+status+"' style='cursor:pointer;' src='/widgets/css/images/removedoc.png' class='cmdremove'>"+statusText+"<input type='hidden'  name='WorkOrderStage[]' value='"+status+"' ></div>");
+            $(".cmdremove").unbind("click").bind("click",function(){
+                var wostatusid = $(this).attr("wostatusid");
+                $("#statusWO").find("option[value='" + wostatusid + "']").css("display", "");
+                $(this).parent().remove();
+            });
+            $(this).find("option:selected").css("display", "none");
+            $(this).find("option[value='']").attr("selected", "selected");
+        });
+        //first time load
+        $(".cmdremoveOnload").unbind("click").bind("click",function(){
+            var wostatusid = $(this).attr("wostatusid");
+            $("#statusWO").find("option[value='" + wostatusid + "']").css("display", "");
+            $(this).parent().remove();
+        });
+    //end 14527
+	-----------------------------
+	//14466
+	    this.setDataEstimatedDuration = function(ev, event){
+        if(typeof(event) == 'undefined') event = this;
+        event = jQuery(event).parent().parent().parent();
+        //console.log("EST DUR HERE");
+        Me.TimeInput_blur(null,jQuery(event).find(".StartTime"));
+        Me.TimeInput_blur(null,jQuery(event).find(".EndTime"));
+        
+        var TechCheckCheckInDate = jQuery.trim(jQuery(event).find(".StartDate").val());
+        var TechCheckCheckInTime = jQuery.trim(jQuery(event).find(".StartTime").val());
+        var TechCheckCheckOutDate = jQuery.trim(jQuery(event).find(".EndDate").val());
+        var TechCheckCheckOutTime = jQuery.trim(jQuery(event).find(".EndTime").val());
+        var classStartType = jQuery(event).parent().find(".classStartType").val();
+        var dataempty = false;
+        if(TechCheckCheckInDate == "") dataempty = true;
+        if(TechCheckCheckInTime == "") dataempty = true;
+        if(TechCheckCheckOutDate == "") dataempty = true;
+        if(TechCheckCheckOutTime == "") dataempty = true;
+        if(dataempty || classStartType == 2){
+            return false;
+        }
+        var data = 'CORCheckInDate='+ TechCheckCheckInDate 
+        +'&CORCheckInTime='+ TechCheckCheckInTime 
+        +'&CORCheckOutDate='+ TechCheckCheckOutDate 
+        +'&CORCheckOutTime='+ TechCheckCheckOutTime; 
+        $.ajax({
+            url : "/widgets/dashboard/details/get-total-hours",
+            data : data,
+            cache : false,
+            type : 'POST',
+            success : function(data) {
+                if(data.total > 0){
+                    var org = data.total/3600;
+                    var time = Math.round(org/0.25,0)*0.25;
+                    jQuery(event).parent().find(".EstimatedDuration").val(time);
+                    //14130
+                    Me.caltotalhourpay();
+                    //end 14130
+					if (typeof paytool_ctrl != "undefined" && paytool_ctrl != null) paytool_ctrl.update ();
+                }
+            }
+        });     
+    };
+	------------------
+	14615
+	
+	configSelectOne : function()
+    {
+        var lengthNone = 0;
+        jQuery("#srskills").find("li[class!='cbxSkill']").each(function(){
+           if(jQuery(this).css("display") == "none")
+           {
+               lengthNone++;
+           }    
+        });
+        if(lengthNone ==find
+            jQuery("#srskills").find("li[class!='cbxSkill']").length || jQuery("#srskills").find("li[class!='cbxSkill']").length <= 0)
+        {
+            jQuery(this.cbxselectSkill).find('option[value=""]').html("Select A Skill Category");
+        }    
+        else
+        {
+            jQuery(this.cbxselectSkill).find('option[value=""]').html("Select Another Skill Category");
+        }    
+    }
+	---------------------
+	 $('.item').contents(':not("img")').remove();
+	 
+	 -------------------------  ////
+	 14516   NGAY 27/06/2014
+	 http://vndevpb.fieldsolutions.com/clients/dashboard.php?v=RNENT&tab=index
+	 Menu left in My Work 
+	 wdata\application\modules\dashboard\controllers\detailcontroller
+     wdata\application\modules\dashboard\views\scripts\sections\dash-content-left.phtml
+	 wdata\application\modules\dashboard\views\scripts\details\navigation.phtml
+	 
+	 --------------------//14690 --------------------------
+	 wdata\application\modules\dashboard\views\scripts\client\urgency-project-options.phtml
+	 
+$(document).ready(function()
+{
+    var loaddefault =0;
+    $('table#projectCheckID #projectCheckboxAll').click(function(event) {
+        if($("#projectCheckboxAll").is(":checked")){
+            jQuery(this).parent().parent().siblings().find('input').attr("checked","checked");
+        } else {
+            jQuery(this).parent().parent().siblings().find('input').removeAttr("checked");
+        }
+        event.stopPropagation();
+    });
+
+    var lengthAllCheckbox = $('table#projectCheckID tr:gt(1) input:checkbox').length;
+
+    $('table#projectCheckID .proCheckboxClass').click(function(event) {
+        if ($('table#projectCheckID tr:gt(1) input:checkbox[checked]').length === lengthAllCheckbox) {
+            $('#projectCheckboxAll').attr('checked', true);
+        } else {
+            $('#projectCheckboxAll').attr('checked', false);
+        }
+        event.stopPropagation();
+    });
+    //first time verifies projectCheckboxAll ckecked or not
+
+    if(loaddefault == 0){
+        if ($('table#projectCheckID tr:gt(1) input:checkbox[checked]').length === lengthAllCheckbox) {
+            $('#projectCheckboxAll').attr('checked', true);
+        } else {
+            $('#projectCheckboxAll').attr('checked', false);
+        }
+        loaddefault = 1;
+    }
+
+});
+----------------
+ $("p").not(".intro");
+ --------------
+ 
+    //14730
+    jQuery(".hoverText").hover(function(e){
+        var isPath = $(this).attr('is-path');
+
+        if(isPath==1 || isPath=='1'){
+            var urlDownload = $('<div></div>')
+                .css({'text-align':'left'})
+                .html('<a href=\"'+$(this).attr('data-cert')+'\" target=\"_blank\"> Download </a>');
+
+
+            var btstr= $(this).attr('bt-xtitle');
+
+            var  certContent =  $('<div></div>').append(btstr).append(urlDownload);
+
+            $('<div></div>').fancybox({
+                'autoDimensions': true,
+                'showCloseButton': true,
+                'width': 'auto',
+                'height': 'auto',
+                'hideOnOverlayClick': false,
+                'enableEscapeButton': false,
+                'content': certContent
+            }).trigger('click');
+        }
+    })
+//End 14730
+			  $ExistingImagePath = "https://s3.amazonaws.com/wos-docs/tags/" . str_replace("|", "", $getFSTagListNew[$i]['TagArt']);
+			  $certUploadedPathURL = $getFSTagListNew[$i]['CertUploadedPathURL'];
+
+               //14730
+				$color = "<img src='$ExistingImagePath' class='hoverText' is-path='".$isPath."' data-cert='".$certUploadedPathURL."' bt-xtitle='$Title$HasMultiTagLevels$date $untagstr' height='27px'/>";
+			   //14730
+			   
+			   --------------------
+			   
+			   submitData = "field=PrimaryEmail&data="+data+"&iso="+$("#TechSource option:selected").val(); //14310
+			   
+			   ------------------------------- 737-----------
+			    var user_name = $("#workOrderOwner :selected").text().split (" - ")[0];
+				
+				---------------------------------------------
+				                    //14412
+                   $("#Password").bind("keypress", function(e){
+                        if(e.keyCode===13)
+                        {
+                         $("#btnlogin").click();
+                        }
+                    });
+                    //end 14412
+					-----------------------------------
+					
+					<!--14412-->
+<script >
+    $(document).ready(function(){
+        $("#liFilter").click(function(){
+            $("#reportNoResult").html(
+                "There are no filters applied " +
+                    '<a href="surveysetup.php?SurveyID=<?= $SurveyID ?>&v=<?= $this->CompanyID ?>">Click Here</a>'+
+                    " to edit your report filters or add additional fields.");
+        });
+        $("#liSort").click(function(){
+            $("#reportNoResult").html(
+                "There are no results. Try " +
+                    '<a href="surveysetup.php?SurveyID=<?= $SurveyID ?>&v=<?= $this->CompanyID ?>">editing your filters.</a>');
+        });
+        });
+</script>
+<!--14412 end-->
+------------------- Fancybox-----------
+    //14412
+    function previewSurveyInTech ()
+    {
+        var sitesurvey = $(this).attr("SurveyID");
+        var comID = $(this).attr("comID");
+        var win = $(this).attr("win");
+        $.ajax({
+                    url      : "/widgets/dashboard/tech-wo-details/site-survey-preview",
+                    data     : { SurveyID: sitesurvey,comID: comID, win: win },
+                    cache    : false,
+                    type     : "POST",
+                    dataType : "html",
+                    error    : function() {}
+					,
+                    success  : function(data, status, xhr) {
+                        
+                   $("<div></div>").fancybox(
+                {
+                    'autoDimensions': true,
+                    'showCloseButton': true,
+                    'hideOnOverlayClick': false,
+                    'content': data
+                }).trigger('click');
+                            } });
+    };
+   //end 14412
+       $(document).ready(function () {
+       $(".cmdPreviewSurveyInTech").unbind("click").bind("click", previewSurveyInTech); //14412
+	   });
+
+-------------------17435---------------
+       //14753
+        function cmdSurveyNext()
+        {
+            //14435
+             $('#cmdSurveyNext').unbind("click");
+            fsSurvey.showLoader();
+            if (!ValidateSurveystep("tblSurvey"))
+            {
+                return false;
+            }
+            //end 14435
+            var lastIndex = <?= $secLastIndex? 1 : 0 ?>;
+            var objData = $('#frmCreateSiteSurvey').serializeArray();
+            if (typeof $('#hidlatitude').val() !== 'undefined' && $('#hidlatitude').val() !== '') {
+                objData.push({"name": "latitude", "value": $('#hidlatitude').val()});
+            }
+            if (typeof $('#hidlongitude').val() !== 'undefined' && $('#hidlongitude').val() !== '') {
+                objData.push({"name": "longitude", "value": $('#hidlongitude').val()});
+            }
+            var arrPhotos = [];
+            var numFiles = 0;
+            var flag = 0;
+            $('#survey-step input[type="file"]').each(function()
+            {
+                if ($(this).val() !== "")
+                {
+                numFiles = numFiles + 1;
+                }
+            });
+            if (numFiles > 0) {
+                $('#survey-step input[type="file"]').each(function() {
+                    var id = $(this).attr('id');
+                    if ($(this).val() !== "")
+                    {
+                    fsSurvey.UploadImageStep(id, function(fName) {
+                        var key = $('#' + id).attr('name');
+                        if (fName.length > 0) {
+                            arrPhotos[flag] = {"name": key, "value": fName};
+                        }
+                        if (flag == numFiles - 1) {
+                            arrPhotos = JSON.stringify(arrPhotos);
+                            objData.push({"name": "photos", "value": arrPhotos});
+                            fsSurvey.UpdateSurveyStep(objData, lastIndex, <?= $nextSectionID ?>);
+                        }
+                        flag = flag + 1;
+                    });
+                    }
+                });
+            } else {
+                fsSurvey.UpdateSurveyStep(objData, lastIndex, <?= $nextSectionID ?>);
+                $('#cmdSurveyNext').unbind("click").bind("click", cmdSurveyNext);
+            }
+            fsSurvey.hideLoader();
+        }
+        $('#cmdSurveyNext').unbind("click").bind("click", cmdSurveyNext);
+		
+		---------
+		        $("<div></div>").fancybox(
+        {
+            'autoDimensions': true,
+            'showCloseButton': false,
+            'hideOnOverlayClick': false,
+            'content': "<div id='loader1'> </div>"
+        }).trigger('click');
+        $.fancybox.showActivity();
+		
+		----
+		        $.fancybox.hideActivity();
+                $.fancybox.close();
+				-------------------
+								----------------------------------------------------------------------------
+			$(this).closest("table").find("tr").each(function() {
+				 if ($(this).attr("QuestionID") === QuestionID)
+				 {
+				 if ($(this).attr("val") === answer)
+				 {
+				 
+				 
+				 }
+				 else
+				 {
+				 $(this).find(".triggeryes").hide();
+				 $(this).find(".trigggerno").show();
+				 $(this).closest("tr").find("td:first").css("color", "gray");
+				 }
+				 }
+				 });
+		        ---------------
+				 $('#'+idMultichoices+' :input').each(function(idx,item){
+				 
+				 -------------
+				 $.each($(".simplewartermark"), function()
+				 ------------
+				  $("#ContainerID_" + section + " input:checkbox").each(
+				  $("#" + section).parent().find("a").each(
+				  
+				  -----------------
+				  jQuery.each()
+Categories: Utilities
+jQuery.each( array, callback )Returns: Object
+Description: A generic iterator function, which can be used to seamlessly iterate over both objects and arrays. Arrays and array-like objects with a length property (such as a function's arguments object) are iterated by numeric index, from 0 to length-1. Other objects are iterated via their named properties.
+
+version added: 1.0jQuery.each( array, callback )
+array
+Type: Array
+The array to iterate over.
+callback
+Type: Function( Integer indexInArray, Object value )
+The function that will be executed on every object.
+version added: 1.0jQuery.each( object, callback )
+object
+Type: Object
+The object to iterate over.
+callback
+Type: Function( String propertyName, Object valueOfProperty )
+The function that will be executed on every object.
+The $.each() function is not the same as $(selector).each(), which is used to iterate, exclusively, over a jQuery object. The $.each() function can be used to iterate over any collection, whether it is an object or an array. In the case of an array, the callback is passed an array index and a corresponding array value each time. (The value can also be accessed through the this keyword, but Javascript will always wrap the this value as an Object even if it is a simple string or number value.) The method returns its first argument, the object that was iterated.
+
+1
+2
+3
+$.each([ 52, 97 ], function( index, value ) {
+  alert( index + ": " + value );
+});
+This produces two messages:
+
+0: 52 
+1: 97
+
+If an object is used as the collection, the callback is passed a key-value pair each time:
+
+1
+2
+3
+4
+5
+6
+7
+var obj = {
+  "flammable": "inflammable",
+  "duh": "no duh"
+};
+$.each( obj, function( key, value ) {
+  alert( key + ": " + value );
+});
+Once again, this produces two messages:
+
+flammable: inflammable 
+duh: no duh
+
+We can break the $.each() loop at a particular iteration by making the callback function return false. Returning non-false is the same as a continue statement in a for loop; it will skip immediately to the next iteration.
+
+Examples:
+Example: Iterates through the array displaying each number as both a word and numeral
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery.each demo</title>
+  <style>
+  div {
+    color: blue;
+  }
+  div#five {
+    color: red;
+  }
+  </style>
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+ 
+<div id="one"></div>
+<div id="two"></div>
+<div id="three"></div>
+<div id="four"></div>
+<div id="five"></div>
+ 
+<script>
+var arr = [ "one", "two", "three", "four", "five" ];
+var obj = { one: 1, two: 2, three: 3, four: 4, five: 5 };
+ 
+jQuery.each( arr, function( i, val ) {
+  $( "#" + val ).text( "Mine is " + val + "." );
+ 
+  // Will stop running after "three"
+  return ( val !== "three" );
+});
+ 
+jQuery.each( obj, function( i, val ) {
+  $( "#" + i ).append( document.createTextNode( " - " + val ) );
+});
+</script>
+ 
+</body>
+</html>
+Demo:
+
+
+Example: Iterates over items in an array, accessing both the current item and its index.
+
+1
+2
+3
+$.each( [ "a", "b", "c" ], function( i, l ){
+  alert( "Index #" + i + ": " + l );
+});
+Example: Iterates over the properties in an object, accessing both the current item and its key.
+
+1
+2
+3
+$.each({ name: "John", lang: "JS" }, function( k, v ) {
+  alert( "Key: " + k + ", Value: " + v );
+});
+
+---------------
+$('#notificationCk :input[type="checkbox"]').each(function(){
+            if($(this).is(':checked')){
+                var content = '';
+            }
+        }
+		-----------------
+		        length = $('table#notificationCk tr.ischecktr input:checkbox[checked]').length;
+        if(length > 0){
+            $('table#notificationCk tr.ischecktr :input:checkbox[checked]').each(function(){
+                var list = "";
+                list = $(this).attr('name');
+                deleteList.push(list);
+            });
+			
+			----------------
+			$('input:radio').change(function(){
+var value = $("form input[type='radio']:checked").val();
+
+///
+// print_r($select->__toString());die();
+----------------
+
+SELECT o.OpportunityID o.postedby o.posteddate o.title o.careerdescription c.Companyname
+        FROM opportunity as o
+        JOIN watchlist as w ON w.OpportunityID=o.OpportunityID
+        INNER JOIN company as c ON c.CompanyID=o.CompanyID
+        WHERE (w.CandidateID='1')
+		------------------------
+		
+Keypress validate Integer
+
+        $("#deal-barcode").keypress(function (e) {
+            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+        });
+		
+		-----------
+		Project ID: 8638875
+		hoiChi*&13
+		-----------------------
+		
+		-----------remove label SEARCH in boostrap table---------
+		"oLanguage": { "sSearch": "" },
+		--------- remove icon sort datatable
+		.dataTable > thead > tr > th[class*="sort"]::after{display: none}
+		
+		"search": "<i class='icon-magnifier'></i>",
+                "searchPlaceholder": "Search...",
+				
+	-------------------- open new link jq---
+					var ext =external_link  ;
+                    var url= 'https://www.linkedin.com/shareArticle?mini=true&url='+ext+'&title='+dealtitle;
+                    window.open(url, '_blank');
+
+
+---------------------------------
+----------------------------------- bur image----------
+
+.thumbnail-hover.title-hover:hover .thumbnail-hero-image {
+    filter: blur(10px)!important;
+    -webkit-filter: grayscale(0.5) blur(10px);
+}
+
+---------------img slider----------
+css: 
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+    width: 100%;
+    margin: auto;
+}
+.carousel-control .glyphicon-chevron-right::before {
+    font-size: inherit;
+}
+.carousel-control .glyphicon-chevron-left,.carousel-control .glyphicon-chevron-right::before {
+    font-size: 2.5rem;
+}
+
+#Investor_Pitch_Deck .carousel-control .glyphicon-chevron-left,
+#Investor_Pitch_Deck .carousel-control .glyphicon-chevron-right {
+    left: auto;
+    line-height: 1em;
+    position: static;
+    top: auto;
+    transform: none;
+    width: 1.4em;
+}
+#Investor_Pitch_Deck .carousel-control{
+    background: rgba(20, 29, 33, 0.1) none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 4px!important;
+    color: rgba(20, 29, 33, 0.5);
+    display: inline-block;
+    float: left !important;
+    height: auto; width:30px!important;
+    left: auto;
+    margin: 0.3em 0.3em 0 0;
+    position: relative!important;
+    right: auto;
+    text-align: center;
+    top: auto;
+    /*width: auto; line-height: 1.4; padding: 0.6em 1.2em; font-size: 1.2rem!important;*/
+}
+.carousel-control .glyphicon-chevron-left,.carousel-control .glyphicon-chevron-right{
+    height: 0;
+}
+#Investor_Pitch_Deck .carousel-inner{
+    border: 8px solid rgba(20, 29, 33, 0.15);
+    border-radius: 4px!important;
+}
+
+<div class="tab-pane fade" id="Investor_Pitch_Deck">
+                                            <div class="row col-md-12">
+                                                <h3 class="" style="margin-top: 0">Investor Pitch Deck</h3>
+                                                <div class="col-md-12 solidTB"></div>
+                                                <div class="col-md-12">
+                                                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                                        <!-- Indicators -->
+                                                        <ol class="carousel-indicators">
+                                                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                                                            <li data-target="#myCarousel" data-slide-to="2"></li>
+                                                        </ol>
+                                                        <!-- Wrapper for slides -->
+                                                        <div class="carousel-inner" role="listbox">
+                                                            <div class="item active">
+                                                                <img src="<?=URL_PUBLIC.'assets/img/p_1.png'?>" alt="Chania" width="460" height="345">
+                                                                <div class="carousel-caption">
+                                                                    <h3></h3>
+                                                                    <p></p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="item">
+                                                                <img src="<?=URL_PUBLIC.'assets/img/p_2.png'?>" alt="Flower" width="460" height="345">
+                                                                <div class="carousel-caption">
+                                                                    <h3></h3>
+                                                                    <p></p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="item">
+                                                                <img src="<?=URL_PUBLIC.'assets/img/p_3.png'?>" alt="Flower" width="460" height="345">
+                                                                <div class="carousel-caption">
+                                                                    <h3></h3>
+                                                                    <p></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Left and right controls -->
+                                                        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                                                            <
+                                                        </a>
+                                                        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                                                            >
+                                                        </a>
+                                                    </div>
+                                                    <!--
+                                                    <img ng-src="https://seedinvest-uploads.s3.amazonaws.com/uploads/2016/03/10/1457571089/Virtuix-ProfileDeck/images/0_4.png?Signature=VnLmt%2BNHk%2BJkWSi2rFbaQfqzZzo%3D&amp;Expires=1466650038&amp;AWSAccessKeyId=AKIAI7AOHIECJJWRRKEA" class="ng-scope" src="https://seedinvest-uploads.s3.amazonaws.com/uploads/2016/03/10/1457571089/Virtuix-ProfileDeck/images/0_4.png?Signature=VnLmt%2BNHk%2BJkWSi2rFbaQfqzZzo%3D&amp;Expires=1466650038&amp;AWSAccessKeyId=AKIAI7AOHIECJJWRRKEA">
+                                                    -->
+                                                </div>
+                                            </div>
+                                        </div>
+										
+										----------------  youtube--------
+										css:
+										*/
+.product-media-content {
+    max-width:640px;
+    margin-left:auto;
+    margin-right:auto;
+}
+.product-media-display {
+    float: none;
+    clear: both;
+    width: 100%;
+    position: relative;
+    padding-bottom: 50%;
+    padding-top: 25px;
+    height: 0;
+}
+.product-media-display iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+<div class="col-md-12 product-media-content">
+	<div class="product-media-display">
+		<!--
+		<iframe class="mymedia" src="https://www.youtube.com/embed/QXyzCRnHXIg?showinfo=0&controls=1&modestbranding=1&rel=0&enablejsapi=1&iv_load_policy=3"></iframe>
+		-->
+		<iframe class="mymedia" src="https://www.youtube.com/embed/BkJlHLfdI8A?showinfo=0&controls=1&modestbranding=1&rel=0&enablejsapi=1&iv_load_policy=3"></iframe>
+		<!--
+		<iframe class="mymedia" src="https://www.youtube.com/embed/QXyzCRnHXIg?showinfo=0&controls=1&modestbranding=1&rel=0&enablejsapi=1&iv_load_policy=31"></iframe>
+		-->
+	</div>
+</div>
+--------------------- Export data excell multi sheets----------------------------
+---------------------Have tested in export sale of uscoin------------------------
+	 require_once (JPATH_SITE.DS.'Classes'.DS.'PHPExcel.php');
+	 require_once (JPATH_SITE.DS.'Classes'.DS.'PHPExcel'.DS.'IOFactory.php');
+	// Create new PHPExcel object
+	$objPHPExcel = new PHPExcel();
+
+	// Create a first sheet, representing sales data
+	$objPHPExcel->setActiveSheetIndex(0);
+	$objPHPExcel->getActiveSheet()->setCellValue('A1', 'Something');
+
+	// Rename sheet
+	$objPHPExcel->getActiveSheet()->setTitle('Name of Sheet 1');
+
+	// Create a new worksheet, after the default sheet
+	$objPHPExcel->createSheet();
+
+	// Add some data to the second sheet, resembling some different data types
+	$objPHPExcel->setActiveSheetIndex(1);
+	$objPHPExcel->getActiveSheet()->setCellValue('A1', 'More data');
+
+	// Rename 2nd sheet
+	$objPHPExcel->getActiveSheet()->setTitle('Second sheet');
+
+	// Redirect output to a client’s web browser (Excel5)
+	header('Content-Type: application/vnd.ms-excel');
+	header('Content-Disposition: attachment;filename="name_of_file.xls"');
+	header('Cache-Control: max-age=0');
+	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+	$objWriter->save('php://output');
+	
+	-------Export XML--------
+	
+	<?php
+	//use PHPExcel;
+	require_once('./vendor/Classes/PHPExcel/Shared/XMLWriter.php');
+
+		$x=new XMLWriter();
+		$x->openMemory();
+		$x->startDocument('1.0','UTF-8');
+		$x->startElement('music');
+			$x->startElement('artist');
+			$x->writeAttribute('name',"Ca khuc moi");
+				$x->startElement('album');
+					$x->writeAttribute('name','Tinh Xuan');
+						$x->startElement('song');
+						$x->text("Mua Xuan Que em");
+						$x->endElement(); // song
+
+						$x->startElement('song');
+						$x->text("Dam Cuoi Mua Xuan");
+						$x->endElement(); // song
+				$x->endElement(); // album
+			$x->endElement(); // artist
+		$x->endElement(); // music
+
+		$x->endDocument();
+		$xml = $x->outputMemory();
+
+		file_put_contents("/CGT-IN/export_xml.xml", $xml);
+		echo "<a href='/CGT-IN/export_xml.xml' target='_blank'>Export database as XML</a>";
+
+	exit;
+	?>
+	
+	---------- date to string----
+	$date=new DateTime(); //this returns the current date time
+    $result = $date->format('Y-m-d-H-i-s');
+	----------Make folder in php----------------
+	 $folderPath = $_SERVER["DOCUMENT_ROOT"] . "/apiCGT/dataexport/".$returnsection['BusinessID'];
+        if (!file_exists($folderPath)) {
+            mkdir($folderPath, 0777, true);
+        }

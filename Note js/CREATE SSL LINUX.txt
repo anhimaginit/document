@@ -1,0 +1,73 @@
+https://www.dynacont.net/documentation/linux/openssl/
+
+sudo cp Entrust2048CARoot.crt /usr/local/share/ca-certificates/Entrust2048CARoot.crt
+sudo cp EntrustChainG2Root.crt /usr/local/share/ca-certificates/EntrustChainG2Root.crt
+sudo cp EntrustL1KChain.crt /usr/local/share/ca-certificates/EntrustL1KChain.crt
+
+A/ How To Create a SSL Certificate on Apache for Debian 8
+	sudo apt-get update
+	sudo apt-get upgrade openssl
+	
+	Step 1 — Install Apache
+	sudo apt-get install apache2
+	
+	Step 2 — Enable the SSL Module
+	sudo a2enmod ssl
+	sudo a2ensite default-ssl
+	sudo service apache2 reload
+	
+	Step 3 — Create a Self-Signed SSL Certificate
+	sudo mkdir /etc/apache2/ssl
+	
+	Next, we will request a new certificate and sign it.
+
+	First, generate a new certificate and a private key to protect it.
+
+	The days flag specifies how long the certificate should remain valid. With this example, the certificate will last for one year
+	The keyout flag specifies the path to our generated key
+	The out flag specifies the path to our generated certificate
+	
+	sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+	
+	-Set the file permissions to protect your private key and certificate.
+	 sudo chmod 600 /etc/apache2/ssl/*
+	 
+	 Step 4 — Configure Apache to Use SSL
+	 
+	 Open the server configuration file using nano or your favorite text editor.
+
+		sudo nano /etc/apache2/sites-enabled/default-ssl.conf
+		Locate the section that begins with <VirtualHost _default_:443> and make the following changes.
+
+		Add a line with your server name directy below the ServerAdmin email line. This can be your domain name or IP address:
+		/etc/apache2/sites-enabled/default
+		ServerAdmin webmaster@localhost
+		ServerName example.com:443
+		Find the following two lines, and update the paths to match the locations of the certificate and key we generated earlier. If you purchased a certificate or generated your certificate elsewhere, make sure the paths here match the actual locations of your certificate and key:
+		/etc/apache2/sites-enabled/default
+		 SSLCertificateFile /etc/apache2/ssl/apache.crt
+		 SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+		Once these changes have been made, check that your virtual host configuration file matches the following.
+
+		/etc/apache2/sites-enabled/default-ssl
+		<IfModule mod_ssl.c>
+			<VirtualHost _default_:443>
+				ServerAdmin webmaster@localhost
+				ServerName example.com:443
+				DocumentRoot /var/www/html
+
+				. . .
+				SSLEngine on
+
+				. . .
+
+				SSLCertificateFile /etc/apache2/ssl/apache.crt
+				SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+				Save and exit the file.
+
+				Restart Apache to apply the changes.
+
+				sudo service apache2 reload
+				
+				Step 5 — Test Apache with SSL
+				openssl s_client -connect your_server_ip:443

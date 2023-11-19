@@ -1,0 +1,28 @@
+https://appdividend.com/2017/08/31/laravel-5-5-reactjs-tutorial/
+https://laravel.com/docs/5.5/passport
+http://krissanawat.com/2017/09/22/create-simple-rest-api-laravel-5-5-passport/
+https://www.itechempires.com/2017/09/laravel-5-5-api-user-authentication-passport-package/
+
+/*
+_getPurchaseColumns.php
+_getTransferColumns.php
+_getInventoryColumns.php
+_getdeductioncolumns.php
+_getcustomercolumns.php
+_getretailsalecolumns.php
+*/
+
+
+{"PurchaseColumns":[
+	{"columnName":"Number","isUsed":1,"Pos":1},
+	{"columnName":"ReferenceOrderNumbers","isUsed":1,"Pos":2},
+	{"columnName":"Date","isUsed":1,"Pos":3},
+	{"columnName":"VendorID","isUsed":1,"Pos":4},
+	{"columnName":"Taxpaid","isUsed":1,"Pos":5},
+	{"columnName":"InvoiceDate","isUsed":1,"Pos":6},
+	{"columnName":"ForBottling","isUsed":1,"Pos":7},
+	{"columnName":"CreditMemo","isUsed":1,"Pos":8},
+	{"columnName":"BusinessID","isUsed":1,"Pos":9},
+	{"columnName":"Quantity","isUsed":1,"Pos":10},
+	{"columnName":"EquivalentID","isUsed":1,"Pos":11}]
+	}

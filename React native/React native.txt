@@ -1,0 +1,14 @@
+ISO :NavigatorIOS
+React Navigation    
+	https://reactnavigation.org/docs/hello-react-navigation.html
+	npm install --save react-navigation
+	
+	hitslop :
+	https://facebook.github.io/react-native/docs/touchablewithoutfeedback.html#hitslop
+	https://facebook.github.io/react-native/docs/improvingux.html
+
+native modules react native
+	https://clever.ly/blog/2017/05/09/going-native-creating-native-modules-in-react-native/
+	https://medium.com/mindorks/how-to-use-native-modules-in-react-native-android-hybrid-apps-62b67a2cc7ca
+
+	

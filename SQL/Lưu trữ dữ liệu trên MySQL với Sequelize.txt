@@ -1,0 +1,304 @@
+http://stackoverflow.com/questions/37638476/sequelize-query-is-giving-typeerror-udefined-is-not-a-function
+http://docs.sequelizejs.com/en/v3/docs/querying/
+http://docs.sequelizejs.com/en/latest/docs/associations/#one-to-one-associations
+https://viblo.asia/nguyen.van.truong/posts/l0rvmmJDvyqA
+
+http://srlm.io/2015/02/04/sequelize-subqueries/
+
+user.update({
+  firstName: "John",
+  lastName: "Doe",
+  address: "Nevada, US"
+},{
+  where: { email : "johndoe@example.com" }
+})
+.then(function () { 
+
+});
+ Lưu trữ dữ liệu trên MySQL với Sequelize
+ 
+ Module Sequelize (http://sequelize.com/) có thể kết nối tới 3 hệ quản trị cơ sở dữ liệu là SQLite3, MySQL và PostgreSQL. Các thao tác với CSDL sẽ được thực hiện theo ORM (Object Relation Mapping).
+ 1/Tạo model
+ a/models-sequelize/notes.js in root folder
+	 var Sequelize = require('sequelize');
+		var Note = undefined;
+		module.exports.connect = function(params, callback) {
+			var sequlz = new Sequelize(
+				params.dbname, 
+				params.username, 
+				params.password,
+				params.params
+			);
+			Note = sequlz.define('Note', {
+				notekey: {
+					type: Sequelize.STRING,
+					primaryKey: true,
+					unique: true
+				},
+				title: Sequelize.STRING,
+				body: Sequelize.TEXT
+			});
+			Note.sync().then(function() {
+				callback();
+			}).error(function(err) {
+				callback(err);
+			});
+		}
+		exports.disconnect = function(callback) {
+			callback();
+		}
+		 
+		exports.create = function(key, title, body, callback) {
+			Note.create({
+					notekey: key,
+					title: title,
+					body: body
+				}).then(function(note) {
+					callback();
+				}).error(function(err) {
+					callback(err);
+			});
+		}
+		 
+		exports.update = function(key, title, body, callback) {
+			Note.find({ where:{ notekey: key} }).then(function(note) {
+				if(!note) {
+					callback(new Error("No note found for key " + key));
+				} else {
+					note.updateAttributes({
+						title: title,
+						body: body
+					}).then(function() { 
+						callback();
+					}).error(function(err) {
+						callback(err);
+					});
+				}
+			}).error(function(err) {
+				callback(err);
+			});
+		}
+		 
+		exports.read = function(key, callback) {
+			Note.find({ where:{ notekey: key} }).then(function(note) {
+				if(!note) {
+					callback("Nothing found for " + key);
+				} else {
+					callback(null, {
+						notekey: note.notekey,
+						title: note.title,
+						body: note.body
+					});
+				}
+			});
+		}
+		 
+		exports.destroy = function(key, callback) {
+			Note.find({ where:{ notekey: key} }).then(function(note) {
+				note.destroy().then(function() {
+				callback();
+			}).error(function(err) {
+				callback(err);
+			});
+			});
+		}
+		 
+		exports.titles = function(callback) { 
+			Note.findAll().then(function(notes) { 
+				var noteList = []; 
+				notes.forEach(function(note) { 
+					noteList.push({
+						key: note.notekey,
+						title: note.title
+					}); 
+				});
+				callback(null, noteList);
+			});
+	}
+	
+	
+	b/app.js
+	
+	var express = require('express');
+	var path = require('path');
+	var favicon = require('serve-favicon');
+	var logger = require('morgan');
+	var cookieParser = require('cookie-parser');
+	var bodyParser = require('body-parser');
+	 
+	var routes = require('./routes/index');
+	var users = require('./routes/users');
+	var notes = require('./routes/notes');
+	//var models = require('./models-fs/notes');
+	//var models = require('./models-sqlite3/notes');
+	//var models = require('./models-mongoose/notes');
+	var models = require('./models-sequelize/notes');
+	models.connect({
+		dbname: "notes",
+		username: "root",
+		password: "<mật khẩu>",
+		params: {
+			host: "127.0.0.1",
+			dialect: "mysql"
+		}
+	},
+	function(err) {
+		if(err)
+			throw err;
+	});
+	notes.configure(models);
+	routes.configure(models);
+	var app = express();
+	 
+	// view engine setup
+	app.set('views', path.join(__dirname, 'views'));
+	app.set('view engine', 'ejs');
+	 
+	// uncomment after placing your favicon in /public
+	//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+	app.use(logger('dev'));
+	app.use(bodyParser.json());
+	app.use(bodyParser.urlencoded({ extended: false }));
+	app.use(cookieParser());
+	app.use(express.static(path.join(__dirname, 'public')));
+	 
+	app.use('/', routes.index);
+	app.use('/users', users);
+	app.get('/noteadd', notes.add);
+	app.post('/notesave', notes.save);
+	app.use('/noteview', notes.view);
+	app.use('/noteedit', notes.edit);
+	app.use('/notedestroy', notes.destroy);
+	app.post('/notedodestroy', notes.dodestroy);
+	// catch 404 and forward to error handler
+	app.use(function(req, res, next) {
+		var err = new Error('Not Found');
+		err.status = 404;
+		next(err);
+	});
+	 
+	// error handlers
+	 
+	// development error handler
+	// will print stacktrace
+	if (app.get('env') === 'development') {
+		app.use(function(err, req, res, next) {
+			res.status(err.status || 500);
+			res.render('error', {
+				message: err.message,
+				error: err
+			});
+		});
+	}
+	 
+	// production error handler
+	// no stacktraces leaked to user
+	app.use(function(err, req, res, next) {
+		res.status(err.status || 500);
+		res.render('error', {
+			message: err.message,
+			error: {}
+		});
+	});
+	 
+	 
+	module.exports = app;
+	
+	c/Tiếp theo chúng ta khai báo module sequelize trong file package.json như sau:
+		{
+		"name": "notes",
+		"version": "0.0.0",
+		"private": true,
+		"scripts": {
+		"start": "node ./bin/www"
+		},
+		"dependencies": {
+			"body-parser": "~1.15.1",
+			"cookie-parser": "~1.4.3",
+			"debug": "~2.2.0",
+			"ejs": "~2.4.1",
+			"express": "~4.13.4",
+			"morgan": "~1.7.0",
+			"serve-favicon": "~2.3.0",
+			"async": "*",
+			"sqlite3": "*",
+			"mongoose": "*",
+			"sequelize": "*"
+		}
+	}
+	
+	
+
+	------------ where
+	
+	var query = {};
+query.where = {
+  $or: [
+    {state: "California"},
+    {state: "Arizona"}
+  ],
+  age: {
+    $between: [20, 40]
+  },
+  lastName: {
+    $ilike: '%user%'
+  }
+};
+user.findAll(query).then(function(users) {
+  // Do something awesome here
+});
+
+SELECT "id", "firstName", "lastName", "email", "age", "country", "state", "dateJoined", "createdAt", "updatedAt"
+FROM "user" AS "user"
+WHERE ("user"."state" = 'California' OR "user"."state" = 'Arizona')
+  AND "user"."age" BETWEEN 20 AND 40
+  AND "user"."lastName" ILIKE '%user%';
+  ------- update-----
+  user.update({
+  firstName: "John",
+  lastName: "Doe",
+  address: "Nevada, US"
+},{
+  where: { email : "johndoe@example.com" }
+})
+.then(function () { 
+
+});
+
+------------- raw query---------
+http://docs.sequelizejs.com/en/latest/docs/raw-queries/
+
+	You need to use bluebird.map.
+
+	var raw_query1 = "select id,name,has_results from users";
+	sequelize.query(raw_query1).then(function(results) {
+
+	  return bluebird.map(results, function(user){
+		var raw_query2 = "select * from meta where user_id = "+user.id;
+		return sequelize.query(raw_query2)
+	  })
+		.then(function(metas){
+		  return res.json(metas);
+		});
+	});
+	
+	-------or
+	sequelize.query("SELECT * FROM `users`", { type: sequelize.QueryTypes.SELECT})
+    .then(function(users) {
+        console.log(users);
+    });
+	
+	-------or	
+
+	update: An example using promises
+
+		sequelize.query("SELECT * FROM users").then(function(users) {
+		  return sequelize.Promise.map(users, function (u) {
+			return sequelize.query("SELECT interests.id, interests.title FROM interests, user_interests WHERE interests.id = user_interests.interest_id AND user_interests.user_id = " + users[u].id).then(function(interests) {
+			  if (interests.length > 0) {
+				user.interests = interests;
+			  }
+			});
+		  });
+		});
+  

@@ -1,0 +1,500 @@
+https://help.ubuntu.com/community/UFW
+https://crm.vpscheap.net/knowledgebase.php?action=displayarticle&id=29
+https://www.cyberciti.biz/tips/linux-iptables-11-how-to-block-or-open-httpweb-service.html
+
+Ubuntu / Debian
+apt-get update && apt-get upgrade
+
+CentOS / Fedora
+yum update
+
+Arch Linux
+pacman -Syu
+
+THIET LAP HOST NAME:
+	echo "develop"  >/etc/hostname
+	hostname -F /etc/hostname
+	ls /etc/default
+	nano /etc/hosts
+	45.56.70.142 develop
+
+SET TIME ZONE
+	dpkg-reconfigure tzdata
+
+INSTALLING APACHE
+	test apache: systemctl status apache2.service
+
+	sudo apt-get install apache2
+
+Optimizing Apache for a Linode 1GB
+	sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.backup.conf
+	sudo nano /etc/apache2/apache2.conf
+	
+Make sure that the following values are set.
+		KeepAlive Off
+
+		...
+	<IfModule mpm_prefork_module>
+		StartServers 2
+		MinSpareServers 6
+		MaxSpareServers 12
+		MaxClients 80
+		MaxRequestsPerChild 3000
+	</IfModule>
+	
+Save the changes to Apache’s configuration file by pressing Control + x and then pressing y. Press Enter to confirm.
+Restart Apache to incorporate the new settings. Enter the following command:
+	sudo service apache2 restart
+if wrong -> do (sudo nano /etc/apache2/apache2.conf   add  "ServerName localhost")
+	
+Configuring Name-based Virtual Hosts
+Disable the default Apache virtual host by entering the following command:
+	sudo a2dissite *default
+	cd /var/www
+	
+Create a folder to hold your website by entering the following command, replacing ‘example.com’ with your domain name:
+	sudo mkdir develop.com
+	
+Create a set of folders inside the folder you’ve just created to store your website’s files, logs, and backups. Enter the following command, replacing example.com with your domain name:
+	sudo mkdir -p develop.com/public_html
+	sudo mkdir -p develop.com/log
+	sudo mkdir -p develop.com/backups
+	
+Create the virtual host file for your website by entering the following command. Replace the example.com in example.com.conf with your domain name:
+	sudo nano /etc/apache2/sites-available/develop.com.conf
+	
+	/etc/apache2/sites-available/develop.com.conf
+
+	# domain: develop.com
+	# public: /var/www/develop/public_html/
+
+	<VirtualHost *:80>
+	  # Admin email, Server Name (domain name), and any aliases
+	  ServerAdmin webmaster@develop.com
+	  ServerName  www.develop.com
+	  ServerAlias develop.com
+
+	  # Index file and Document Root (where the public files are located)
+	  DirectoryIndex index.html index.php
+	  DocumentRoot /var/www/develop.com/public_html
+	  # Log file locations
+	  LogLevel warn
+	  ErrorLog  /var/www/develop.com/log/error.log
+	  CustomLog /var/www/develop.com/log/access.log combined
+	</VirtualHost>
+
+Save and run
+	sudo a2ensite develop.com.conf
+	
+	//////////////  000-default.conf ////////////////////
+	    ServerAdmin webmaster@localhost
+        #DocumentRoot /var/www/html
+        DocumentRoot /var/www/develop.com/public_html/
+        <Directory  /var/www/develop.com/public_html/>
+          AllowOverride All
+			Order allow,deny
+			allow from all
+		</Directory>
+	////////////default-ssl.conf //////////////////////
+	<VirtualHost _default_:443>
+                ServerAdmin webmaster@localhost
+
+                DocumentRoot /var/www/develop.com/public_html
+-------
+sudo service apache2 restart
+
+
+--------------
+Install mysql
+
+sudo apt-get install mysql-server
+//sudo mysql_secure_installation
+
+3/sudo nano /etc/mysql/my.cnf
+ Optimizing MySQL for a Linode 1GB
+		max_connections = 75
+		key_buffer = 32M
+		max_allowed_packet = 1M
+		thread_stack = 128K
+		table_cache = 32
+
+
+sudo service mysql restart
+
+4/Installing PHP
+sudo apt-get install php5 php-pear
+sudo apt-get install php5-mysql
+
+Optimizing PHP for a Linode 1GB
+	sudo nano /etc/php5/apache2/php.ini
+	
+		max_execution_time = 30
+		memory_limit = 128M
+		error_reporting = E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR
+		display_errors = Off
+		log_errors = On
+		error_log = /var/log/php/error.log
+		register_globals = Off
+		
+sudo mkdir -p /var/log/php
+sudo service apache2 restart
+----------
+5/Installing phpMyAdmin
+Preparing Your Apache Configuration
+	apt-get update
+	apt-get upgrade --show-upgraded
+phpMyAdmin requires the mcrypt PHP module
+	apt-get install php5-mcrypt
+	/etc/init.d/apache2 restart
+	
+Installing phpMyAdmin
+	apt-get install phpmyadmin
+Configuring phpMyAdmin
+
+-----------
+Config mysql and php look linod
+
+If existing mysql, to share phpmyadmin do that:
+
+cd /var/www/develop.com/public_html
+ln -s /usr/share/phpmyadmin
+
+-----------------
+6/Securing phpMyAdmin
+	.htaccess File
+	 /var/www/uscoins.com/public_html/phpmyadmin/.htaccess
+		order allow,deny
+		allow from 45.56.70.142
+		
+Force SSL
+You can force phpMyAdmin to use SSL in the phpMyAdmin configuration file /etc/phpmyadmin/config.inc.php by adding the following lines under the Server(s) configuration section:
+
+/etc/phpmyadmin/config.inc.php
+1
+$cfg['ForceSSL'] = 'true';
+----------
+
+mode rewrite : sudo a2enmod rewrite
+off: sudo a2enmod expires
+sudo service apache2 restart
+
+------------------
+linux: find php.ini
+  php -i |grep 'Configuration File'
+---------------------
+
+SECURITY
+	1/Secure Your Web Site from Clickjacking Attack?
+	Explain:
+    The X-Frame-Options in HTTP response header can be used to indicate whether or not a browser should be allowed to open a page in frame or iframe. This will prevent site content embedded into other sites. Did you every try embed Google.com in your website as frame? You can’t because it’s protected and you can protect it too.
+	There are three settings for X-Frame-Options:
+	SAMEORIGIN: This setting will allow page to be displayed in frame on the same origin as the page itself.
+	DENY: This setting will prevent a page displaying in a frame or iframe.
+	ALLOW-FROM uri: This setting will allow page to be displayed only on the specified origin.
+	
+	How to implement in Apache, IBM HTTP Server?
+
+	Add following line in Apache Web Server’s httpd.conf file
+
+		-Header always append X-Frame-Options SAMEORIGIN
+		-Restart Apache Web Server
+		-RUN command a2enmod headers
+	2/prevent access another folder
+		add access file : Options -Indexes +FollowSymLinks
+		
+		
+		
+		
+		
+	-------------------
+	<VirtualHost 104.237.133.52:8088>
+	DocumentRoot /var/www/html/PatientTraq/public
+
+	ServerName koa.andybui.com
+	ServerAlias koa.andybui.com 
+
+	<Directory /var/www/html/PatientTraq/public>
+		AllowOverride all
+	</Directory>		
+  
+	# Other directives here
+
+</VirtualHost>
+
+
+---------------------
+
+sudo /etc/init.d/apache2 restart
+
+------------- find file------
+find -name "tenfile"
+
+------------------
+Install mdbtools-dev
+Installing mdbtools-dev package on Debian 7 (Wheezy) is as easy as running the following command on terminal:
+----------------------update-------------
+sudo apt-get update
+sudo apt-get install mdbtools-dev
+---------------------tar------------
+tar -xvzf /path/to/yourfile.tgz
+tar -xvf 
+
+2. gunzip unixODBC*.tar.gz 
+3. tar -xvf unixODBC*.tar
+
+the package is essential----------------------------
+
+#apt-get update
+#apt-get upgrade
+# apt-get install build-essential
+
+sudo apt-get install autoconf
+
+# whereis gcc make
+# gcc -v
+# make -v
+
+---------version-------------
+uname -a 
+uname -m   //32 or 64
+
+lsb_release -a
+
+------------------ update ubuntu 14.10 to---------
+c1/I solved problem.
+
+	sudo -i
+	apt-get clean
+	cd /var/lib/apt
+	mv lists lists.old
+	mkdir -p lists/partial
+	apt-get clean
+	apt-get update
+
+	c2/ Support was able to help me get this resolved by having me run:
+	rm -rf /var/lib/apt/lists/partial/*
+
+c3/ 
+	Ubuntu 14.10 (Utopic Unicorn) reached "End of Life" on July 23, 2015 and is no longer supported. Ubuntu has recently remove it from their official mirrors. If you still require the Apt repositories for it, you'll need to edit your /etc/apt/source.list to point to:
+
+	http://old-releases.ubuntu.com/
+	We've also set up a mirror for it at:
+
+http://mirrors.digitalocean.com/ubuntu-old
+
+----------
+This was fixed in SVN two years ago, but there was no new package made for it.
+
+For the time being, you can grab source from svn and compile for yourself:
+
+svn co https://svn.php.net/repository/pecl/mdbtools
+cd mdbtools/trunk
+phpize
+./configure --with-mdbtools
+make
+sudo make install
+
+---------------
+Using "iodbc-config --cflags" and "iodbc-config --libs" 
+
+----------rename folder-----------
+	mv /home/user/oldname /home/user/newname
+	
+	rename "computer hope.txt" "example file.txt"
+	
+	
+	-----------Lib odbc----------
+	
+	isql -v mydb
+
+	sudo apt-get install mdbtools-gmdb 
+
+	odbcinst -j
+
+	apt-get install unixodbc libmdbodbc1 php5-odbc
+	install php5w-devel
+
+
+	sudo apt-get install unixODBC unixODBC-dev    //lib odbc
+
+	php -i | grep PDO
+
+	http://www.unixodbc.org/
+	https://pecl.php.net/package/mdbtools
+	https://devzone.zend.com/1315/reading-access-databases-with-php-and-pecl/
+	https://www.quora.com/How-do-I-connect-a-database-in-PHP-with-MS-Access-thats-hosted-on-Linux
+	
+	-----------have install------
+	sudo apt-get install php5-mysqlnd
+    and add below code into php.ini
+	[PHP]
+		extension = mysqlnd.so
+		extension = pdo.so
+		extension = pdo_mysql.so
+		
+	--------------------------------------- Fixed cross domain-----------------
+	Add these line in .haccess and put this file in folder source code
+	
+	Header add Access-Control-Allow-Origin "*"
+	Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type"
+	Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
+   
+    and run command a2enmod  
+	
+	----------------------------------------------------------------------------
+	php dpkg -l | grep 'ii php5\?-'
+	php -m
+	
+	sudo apt-get install php5-cli php5-dev php-pear
+	
+	sudo service apache2 restart
+	
+	install pear: 
+	sudo apt-get update
+	sudo apt-get install php-pear
+	
+	path:$ php -c /path/to/php.ini -r 'echo get_include_path()."\n";'
+	pear version
+	
+	1/First, check where PEAR installs .php files:
+
+	$ pear config-get php_dir
+	2/php --ini
+	php -v
+	pear version
+	
+	pecl install -f pecl_http-1.7.6
+	
+	pecl install -f pecl_http-1.6.4
+	
+	sudo apt-get install libcurl3-dev will provide curl/curl.h
+	or :
+	sudo apt-get install -y curl libcurl3 libcurl4-gnutls-dev libmagic-dev then sudo pecl install pecl_http.
+	
+	or:
+	sudo apt-get install libcurl3-openssl-dev
+	sudo pecl install -a pecl_http
+
+	sudo sh -c "echo 'extension=http.so' > /etc/php5/mods-available/http.ini"
+	sudo ln -s /etc/php5/mods-available/http.ini /etc/php5/conf.d/
+	
+	---check version linux :lsb_release -a
+	
+	[http_message_object.lo]
+	
+	/etc/php5/apache2
+	$ php -c /etc/php5/apache2/php.ini -r 'echo get_include_path()."\n";'
+	//------------
+	enable_dl = On  //Off
+	include_path = ".:/usr/share/php"
+	include_path=".:/usr/share/pear/"
+	extension=http.so
+	//----- guzzle
+	# Install Composer
+	curl -sS https://getcomposer.org/installer | php
+	php composer.phar require guzzlehttp/guzzle
+	
+	After installing, you need to require Composer's autoloader:
+	require 'vendor/autoload.php';
+	
+	------------------- 
+	
+	How do I flush out the DNS resolver cache?
+	sudo apt-get install nscd
+	To flush DNS Cache do:
+
+	sudo /etc/init.d/nscd restart
+	
+	-------------TRACEROUTE -----------
+	
+	tcptraceroute -p 443 127.0.0.1
+
+	
+	-------------list open ports
+	netstat -lntu
+	netstat -anl
+	sudo lsof -iTCP -sTCP:LISTEN -P Do you see Apache on port 443 on the list?
+	netstat -ntlp | grep LISTEN
+	
+	--------open port 443 on any linux.
+
+	iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+	service iptables save
+	service iptables restart
+	Or
+	iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+	iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+	/etc/init.d/iptables save
+	/etc/init.d/iptables restart
+		
+	-----------see iptable's rule---------
+	iptables -vnL
+	-------------firewall ufw
+	sudo aptitude install ufw
+	
+	How do I open tcp port # 22?
+		To allow incoming tcp packets on port 22, enter:
+		sudo ufw allow 22/tcp
+
+	Verify it:
+		sudo ufw status verbose
+	
+	How do I open tcp port # 80 and 443?
+	The service specific syntax is as follows to open http and https service ports:
+		sudo ufw allow http
+		sudo ufw allow https
+
+		OR
+		sudo ufw allow 80/tcp
+		sudo ufw allow 443/tcp
+
+	How do I open tcp and udp port # 53?
+	To allow incoming tcp and udp packet on port 53, enter:
+		sudo ufw allow 53
+
+	Verify it:
+		sudo ufw status verbose
+		
+	Advanced examples
+		To allow IP address 192.168.1.10 access to port 22 for all protocols
+		sudo ufw allow from 192.168.1.10 to any port 22
+
+	Open port 74.86.26.69:443 (SSL 443 nginx/apache/lighttpd server) for all, enter:
+		sudo ufw allow from any to 74.86.26.69 port 443 proto tcp
+
+	To allows subnet 192.168.1.0/24 to Sabma services, enter:
+		ufw allow from 192.168.1.0/24 to any app Samba
+
+		You can find service info as follows:
+		sudo ufw app list
+
+		Sample outputs:
+
+	Available applications:
+	  Nginx Full
+	  Nginx HTTP
+	  Nginx HTTPS
+	  Squid
+	  
+	  --------cipher--------
+	  openssl ciphers [-v] [-V] [-ssl2] [-ssl3] [-tls1] [cipherlist]
+	  -------Add a certificate----
+	  Add	
+	Copy your CA to dir /usr/local/share/ca-certificates/
+	Use command: sudo cp foo.crt /usr/local/share/ca-certificates/foo.crt
+	Update the CA store: sudo update-ca-certificates
+	Remove	
+	Remove your CA.
+	Update the CA store: sudo update-ca-certificates --fresh
+	
+	-------------- How do I check if my SSL Certificate is SHA1 or SHA2 on the commandline.
+	openssl s_client -connect www.googleapis.com:443 < /dev/null 2>/dev/null \
+    | openssl x509 -text -in /dev/stdin | grep "Signature Algorithm"
+	
+	
+	https://serverfault.com/questions/638691/how-can-i-verify-if-tls-1-2-is-supported-on-a-remote-web-server-from-the-rhel-ce
+	openssl s_client -connect google.com:443 -tls1_2
+	openssl s_client -connect biz.revenue.state.il.us:443 -tls1_2
+	
+	nmap --script ssl-enum-ciphers -p 443 www.example.com
+	

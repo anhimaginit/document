@@ -1,0 +1,4 @@
+Delete folder
+	rm -rf letters/
+Copy folder test TO test1
+	cp -avr test test1

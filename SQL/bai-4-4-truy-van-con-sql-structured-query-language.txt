@@ -1,0 +1,315 @@
+https://www.mastercode.vn/blog/sql-server/bai-4-4-truy-van-con-sql-structured-query-language.33
+http://www.mastercode.vn/blog/sql-server/bai-4-4-truy-van-con-sql-structured-query-language.37
+
+https://www.mastercode.vn/blog/sql-server/bai-5-lap-trinh-voi-csdl.39
+
+http://www.code30s.com/bai-15-xu-ly-gia-tri-null-trong-sql-152
+http://phpcoban.com/truy-van-con-trong-sql-subquery/
+-----------------------exist-----------------
+https://www.mysqltutorial.org/mysql-exists/
+
+a.
+VD: ta đếm xem có bao nhiêu người làm lính
+ select count(*) 
+  from employees e
+ where e.employee_id not in
+   (
+  select mgr.manager_id
+  from employees mgr
+  where mgr.manager_id is not null 
+    );
+
+1/Các dạng truy vấn con
+
+	Truy vấn con một dòng
+	Truy vấn con nhiều dòng
+	A/Truy vấn con một dòng
+		Trả về duy nhất 1 dòng
+		Sử dụng các toán tử so sánh một dòng
+		= Bằng
+		> Lớn hơn
+		>= Lớn hơn hoặc bằng
+		< Nhỏ hơn
+		<= Nhỏ hơn học bằng
+		<> Không bằng
+	a/qlnv: manhanvien tennv  mucluong macongviec maphong  manguoiquanly
+		+  Trả về duy nhất 1 dòng 
+		select * from qlnv
+		where macongviec = (
+				select macongviec
+				from qlnv
+				where manhanvien="nv001"
+				)
+				AND mucluong > (
+				select mucluong
+				from qlnv
+				where manhanvien="nv003"
+				)
+				-----------
+		+ Sử dụng hàm nhóm dữ liệu trong truy vấn con
+		select * from qlnv
+		where mucluong=(
+			select min(mucluong)
+			from qlnv
+		)
+				---------
+		+Mệnh đề HAVING với truy vấn con
+		select maphong, min(mucluong) 
+		from qlnv
+		group by maphong
+		having min(mucluong)>(
+				select min(mucluong)
+				from qlnv
+				where maphong="mp003"
+		)
+		
+		-------
+		+Câu lệnh sau sai ở chỗ nào?
+		    -sai, do mệnh đề con trả về nhiều dòng, nên khong
+			dùng "=" được. hoặc bỏ group by
+			
+		select manhanvien, min(mucluong)
+		from qlnv
+		where mucluong =(
+			select min(mucluong)
+			from qlnv
+			group by maphong
+		)
+		--------
+	b/ Truy vấn con nhiều dòng
+
+		Trả về nhiều dòng
+		Sử dụng các toán tử so sánh nhiều dòng
+		IN Bằng một trong các giá trị
+		ANY Chỉ cần thỏa một trong các giá trị trả về bởi truy vấn con
+		ALL Phải thỏa tất cả các giá trị trả về bởi truy vấn con
+		+Sử dụng toán tử ANY
+			select * from qlnv
+			where mucluong <ANY (
+				select mucluong
+				from qlnv
+				where macongviec = "mcv01"
+			)
+			AND macongviec <> "mcv01";
+			
+	c/Phần mở rộng của Truy vấn con
+		-Truy vấn con nhiều cột
+		-Truy vấn con trong mệnh đề FROM
+		-Sử dụng truy vấn con đơn trị (scalar subquery)
+		-Viết truy vấn con kết hợp (Correlated subquery)
+		-Sử dụng hàm EXISTS
+		
+		+Truy vấn con trả về nhiều cột
+		ex: Liệt kê danh sách những nhân viên được quản lý bởi bởi cùng một người 
+		và làm trong cùng phòng với nhân viên có mã số là 143.
+		
+		select * from qlnv
+		where (STR(manguoiquanly)+STR(maphong)) in 
+		(
+			select STR(manguoiquanly)+STR(maphong)
+			from qlnv
+			where manhanvien="nv003"
+		)
+		AND manhanvien <> "nv003";
+		------------------
+		+Sử dụng truy vấn con trong mệnh đề FROM
+		Sử dụng truy vấn con trong mệnh đề FROM
+			Biểu thức truy vấn con đơn trị (A scalar subquery expression) là một truy vấn con trả về duy nhất một cột và một dòng.
+			Truy vấn con đơn trị có thể sử dụng:
+			Trong các điều kiện và biểu thức của CASE
+			Trong tất cả các mệnh đề của SELECT ngoại trừ GROUP BY
+		
+		EX:	tìm nhâN viên có mức lương lớn hơn mức lương trung bình của phòng
+		select a.tennv, a.mucluong, a.maphong,b.tb_luong
+		from qlnv a,
+			(	select maphong, AVG(mucluong) tb_luong
+				from qlnv GROUP BY maphong ) b
+		where a.maphong=b.maphong AND a.mucluong > b.tb_luong;
+		
+		+Ví dụ Truy vấn con đơn trị
+		    select manhanvien, tenvn,
+			(CASE
+				WHEN maphong = (select maphong from phong
+					where makhuvuc =1800)
+				then N'Sai gon' else N'Hanoi' end) diaban
+			 from nhanvien
+			)
+			
+			----
+			Simple CASE:
+
+			CASE biểu_thức_đầu_vào
+			   WHEN biểu_thức_1 THEN biểu_thức_kết_quả_1
+			   WHEN biểu_thức_2 THEN biểu_thức_kết_quả_2
+			   …
+			   WHEN biểu_thức_n THEN biểu_thức_kết_quả_3
+			   ELSE biểu_thức_kết_quả
+			END
+			
+			vidu:
+			SELECT DeviceName, Code,
+			   (CASE code
+				  WHEN '01' THEN N'Đang sử dụng'
+				  WHEN '02' THEN N'Đang bảo trì'
+				  WHEN '03' THEN N'Đang nâng cấp'
+				  ELSE N'Đang trong kho'
+			   END) AS  Status
+				FROM DeviceStatus
+				ORDER BY Code
+				Searched CASE:
+		---------
+		CASE
+		   WHEN biểu_thức_điều-kiện_1 THEN biểu_thức_kết_quả_1
+		   WHEN biểu_thức_ điều-kiện _2 THEN biểu_thức_kết_quả_2
+		   …
+		   WHEN biểu_thức_ điều-kiện _n THEN biểu_thức_kết_quả_n
+		   ELSE biểu_thức_kết_quả
+		END
+		
+		vidu
+		SELECT StudentName, Score,
+		   (CASE
+			  WHEN Score >= 9 THEN N'Xuất sắc'
+			  WHEN Score >= 8 THEN N'Giỏi'
+			  WHEN Score >= 6.5 THEN N'Khá'
+			  WHEN Score >= 5 THEN N'Trung bình'
+			  ELSE N'Dưới trung bình'
+		   END) AS  Range
+		FROM ScoreList
+		ORDER BY Score DESC
+		
+		+Trong menh de ORDER BY
+		select manhanvien, tennv
+		from nhanvien vn
+		order by (select tenphong
+					from phong phong
+					where nv.maphong = ph.maphong)
+					
+	    ---
+			  $select = "Select g1.department,g1.ID, g1.role from 
+	  groups  g1,
+	(SELECT MIN(ID) AS id2 ,department from groups  WHERE JSON_SEARCH(`users`, 'all', '{$idlogin}') IS NOT NULL
+                GROUP BY department) g2
+                WHERE g1.ID=g2.id2";
+	  
+				
+		1/explanation: Sử dụng truy vấn con trong mệnh đề FROM
+		-Biểu thức truy vấn con đơn trị (A scalar subquery expression) là một truy vấn con trả về duy nhất một cột và một dòng.
+		-Truy vấn con đơn trị có thể sử dụng:
+			-Trong các điều kiện và biểu thức của CASE
+			-Trong tất cả các mệnh đề của SELECT ngoại trừ GROUP BY
+			
+			+Ví dụ Truy vấn con đơn trị
+			select manhanvien, tennv,
+				(case 
+					when maphong in(
+						select maphong from phong
+						where makhuvuc ="kv1"
+					)  then 'Sai gon'
+					else 'ha noi' 
+				end) diaban
+			from qlnv
+			------------
+			+Trong mệnh đề group by
+			select manhanvien, tennv
+			from qlnv nv
+			order by (select tenphong
+					from phong ph
+					where nv.maphong=ph.maphong)
+				-------------
+		-Truy vấn con kết hợp:
+		EX:	tìm nhâN viên có mức lương lớn hơn mức lương trung bình của phòng
+		//Sử dụng truy vấn con trong mệnh đề FROM
+		
+		select tennv, mucluong, maphong
+		from qlnv bangcha
+		where mucluong > (
+			select AVG(mucluong)
+			from qlnv 
+			where maphong = bangcha.maphong)
+			
+	+Sử dụng hàm EXISTS
+	Hàm EXISTS kiểm tra tồn tại kết quả trả về từ câu truy vấn con.
+		-Tìm thấy một dòng trong truy vấn con:
+			Kết thúc tìm kiếm trong truy vấn con
+			Trả về kết quả TRUE
+		
+		-Nếu chưa tìm thấy dòng nào:
+			Trả về FALSE
+			Tiếp tục tìm kiếm trong truy vấn con
+			
+		ex: tìm nhân viên quản lý ít nhất một người
+		select manhanvien, tennv, macongviec,maphong
+		from qlnv bangcha
+		where exists (select 'X'
+						from qlnv
+						where manhanvien=bangcha.manguoiquanly)
+2/SUM
+	A/Sử dụng câu truy vấn con (sub query)
+	-Hiển thị danh sách các nhà cung cấp mà chưa có đơn đặt hàng
+	SELECT cc.*
+	FROM nhacc AS cc
+	WHERE
+    cc.manhacc NOT IN ( SELECT dh.manhacc FROM dondh AS dh )
+	
+	-Hiển thị các đơn đặt hàng mà chưa có phiếu nhập	
+	SELECT dh.*
+	FROM dondh AS dh
+	WHERE dh.sodh NOT IN (SELECT pn.sodh FROM pnhap AS pn)
+	
+	-Hiển thị danh sách các đơn đặt hàng có tổng số lần nhập là lớn nhất
+	SELECT  top 1 tmp.TongSLNhap AS 'TongSLNhap'
+	FROM dondh AS dh
+		LEFT JOIN
+		(
+			SELECT SUM(cn.slnhap) AS 'TongSLNhap',pn.sodh
+			FROM ctpnhap cn
+				LEFT JOIN pnhap pn ON cn.sopn = pn.sopn
+			GROUP BY pn.sodh
+		) AS tmp ON tmp.sodh = dh.sodh
+	ORDER BY TongSLNhap DESC
+	
+	B/Sử dụng câu truy vấn kết hợp (correlative query)
+		-Hiển thị danh sách các nhà cung cấp mà chưa có đơn đặt hàng
+		SELECT cc.*
+		FROM nhacc AS cc
+		WHERE
+			cc.manhacc NOT IN
+					(    SELECT dh.manhacc
+						FROM dondh AS dh
+						WHERE dh.manhacc = cc.manhacc
+					)
+		-Hiển thị danh sách các nhà cung cấp gồm các cột: mã nhà cung cấp, tên nhà cung cấp và tổng số đơn đặt hàng
+		SELECT
+			cc.manhacc,
+			cc.tennhacc,
+			(    SELECT COUNT(*)
+				FROM dondh AS dh
+				WHERE dh.manhacc = cc.manhacc
+			) AS 'TongDondh'
+		FROM nhacc AS cc
+		
+		-Hiển thị danh sách các nhà cung cấp gồm các cột: mã nhà cung cấp, tên nhà cung cấp, tổng số đơn đặt hàng và tổng số phiếu nhập
+			--Hiển thịdanh sách các nhà cung cấp gồm các cột:
+			--mã nhà cung cấp, tên nhà cung cấp,
+			--tổng số đơn đặt hàng và tổng số phiếu nhập
+
+		SELECT
+			cc.manhacc,
+			cc.tennhacc,
+			(    SELECT COUNT(*)
+				FROM dondh AS dh
+				WHERE dh.manhacc = cc.manhacc
+			) AS 'TongDondh',
+			(
+				SELECT COUNT(*)
+				FROM pnhap AS pn
+					INNER JOIN dondh AS dh ON pn.sodh = dh.sodh
+				WHERE dh.manhacc = cc.manhacc
+			) AS 'TongPnhap'
+		FROM nhacc AS cc
+		
+		
+		
+		
+		  
